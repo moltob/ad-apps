@@ -1,2 +1,0 @@
-# ad-apps
-appdaemon applications

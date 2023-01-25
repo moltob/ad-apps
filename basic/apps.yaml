@@ -1,0 +1,5 @@
+toggle:
+  module: toggle
+  class: ToggleApp
+  entity_sensor: sensor.livingroom_switch_floorlamps_couch_action
+  entity_actuator: light.living_room_floorlamps_couch
