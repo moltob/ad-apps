@@ -1,4 +1,15 @@
-toggle:
+radiator_attic:
+  module: radiator
+  class: RadiatorApp
+  entity_radiator: climate.attic_radiator
+  entity_temperature: sensor.attic_climate_temperature
+  entity_window: binary_sensor.attic_window_contact
+  entity_time_comfort_start: input_datetime.attic_time_comfort_start
+  entity_time_comfort_stop: input_datetime.attic_time_comfort_stop
+  entity_temperature_comfort: input_number.attic_temperature_comfort
+  entity_temperature_eco: input_number.attic_temperature_eco
+
+toggle_livingroom_floorlamps_couch:
   module: toggle
   class: ToggleApp
   entity_sensor: sensor.livingroom_switch_floorlamps_couch_action
