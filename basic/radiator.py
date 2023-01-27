@@ -1,71 +1,70 @@
 """Basic radiator control through external temperature sensor."""
 import datetime
-import typing
+import typing as t
 
 import appdaemon.plugins.hass.hassapi
-import appdaemon.entity
 
 PERIOD_MINUTES = 15
 
 
-class RadiatorApp(appdaemon.plugins.hass.hassapi.Hass):
-    entity_radiator: appdaemon.entity.Entity
-    entity_temperature: appdaemon.entity.Entity
-    entity_window: appdaemon.entity.Entity
+class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
+    """Base class exposing some utilities for AppDaemon apps.
 
+    For convenience, some wrappers for base class methods are offered in an "ae" version, meaning
+    they take the entity ID as indirect reference by an app argument.
+    """
+
+    def get_state_ae(self, argument_name: str, *args, **kwargs) -> str:
+        return t.cast(str, self.get_state(self.args[argument_name], *args, **kwargs))
+
+    def call_service_ae(self, service: str, argument_name: str, **kwargs):
+        self.call_service(service, entity_id=self.args[argument_name], **kwargs)
+
+
+class RadiatorApp(MyHomeAssistantApp):
     def initialize(self):
-        self.entity_radiator = self.get_entity(self.args['entity_radiator'])
-        self.entity_temperature = self.get_entity(self.args['entity_temperature'])
-        self.entity_window = self.get_entity(self.args['entity_window'])
-
-        for entity in (self.entity_radiator, self.entity_temperature, self.entity_window):
-            if not entity.exists():
-                self.logger.error('Entity %r not found.', entity.entity_id)
-                return
-
-        self.entity_window.listen_state(self.control_radiator)
-        self.run_every(self.control_radiator, 'now + 4', PERIOD_MINUTES * 60)
+        self.listen_state(self.control_radiator, self.args['entity_window'])
+        self.run_every(self.control_radiator, 'now + 5', PERIOD_MINUTES * 60)
 
     def control_radiator(self, *args, **kwargs):
-        self.logger.debug('Evaluating radiator control for %r.', self.entity_radiator.entity_id)
-
         # stop heating if window is open:
-        if self.entity_window.get_state() == 'on':
-            self.logger.debug('Not heating because window is open.')
-            self.set_temperature(0)
+        if self.get_state_ae('entity_window') == 'on':
+            self.set_temperature(0, 'Window open')
             return
 
         # check time if in eco or comfort mode:
         now = datetime.datetime.now().time()
-        comfort_start_str = self.get_state(self.args['entity_time_comfort_start'])
-        comfort_stop_str = self.get_state(self.args['entity_time_comfort_stop'])
-
-        if not (comfort_start_str and comfort_stop_str):
-            self.logger.error('Not all switch times are defined.')
-            return
-
-        comfort_start = datetime.time.fromisoformat(comfort_start_str)
-        comfort_stop = datetime.time.fromisoformat(comfort_stop_str)
+        comfort_start = datetime.time.fromisoformat(self.get_state_ae('entity_time_comfort_start'))
+        comfort_stop = datetime.time.fromisoformat(self.get_state_ae('entity_time_comfort_stop'))
 
         if comfort_start <= now < comfort_stop:
-            self.logger.debug('Heating in comfort mode.')
-            self.set_temperature(float(self.get_state(self.args['entity_temperature_comfort'])))
-        else:
-            self.logger.debug('Heating in eco mode.')
-            self.set_temperature(float(self.get_state(self.args['entity_temperature_eco'])))
-
-    def set_temperature(self, temperature: float):
-        self.logger.debug('Setting target temperature to %s.', temperature)
-        current_temperature = float(self.entity_temperature.get_state())
-
-        if temperature > 0 and current_temperature < temperature:
-            apparent_temperature = float(self.entity_radiator.get_state('current_temperature'))
-            target_temperature = temperature + max(
-                0,
-                2 * (apparent_temperature - current_temperature),
+            self.set_temperature(
+                float(self.get_state_ae('entity_temperature_comfort')), 'Comfort mode'
             )
-
-            self.logger.info('Offset corrected target temperature is %s.', target_temperature)
-            self.entity_radiator.call_service('set_temperature', temperature=target_temperature)
         else:
-            self.entity_radiator.call_service('set_temperature', hvac_mode='off', temperature=0)
+            self.set_temperature(float(self.get_state_ae('entity_temperature_eco')), 'Eco mode')
+
+    def set_temperature(self, target_temperature: float, reason: str):
+        apparent_temperature = float(self.get_state_ae('entity_radiator', 'current_temperature'))
+        actual_temperature = float(self.get_state_ae('entity_temperature'))
+
+        if target_temperature > 0 and actual_temperature < target_temperature:
+            offset = max(0.0, 2 * (apparent_temperature - actual_temperature))
+            set_temperature = target_temperature + offset
+        else:
+            set_temperature = 0
+
+        self.logger.info(
+            '%s: target = %s, apparent = %s, actual = %s, set = %s.',
+            reason,
+            target_temperature,
+            apparent_temperature,
+            actual_temperature,
+            set_temperature,
+        )
+
+        self.call_service_ae(
+            'climate/set_temperature',
+            'entity_radiator',
+            temperature=set_temperature,
+        )
