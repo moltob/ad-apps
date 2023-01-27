@@ -2,9 +2,6 @@ import appdaemon.plugins.hass.hassapi
 import typing as t
 
 
-PERIOD_MINUTES = 15
-
-
 class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
     """Base class exposing some utilities for AppDaemon apps.
 
