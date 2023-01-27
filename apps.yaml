@@ -17,5 +17,6 @@ radiator_attic:
 toggle_livingroom_floorlamps_couch:
   module: toggle
   class: ToggleApp
+  global_dependencies: base
   entity_sensor: sensor.livingroom_switch_floorlamps_couch_action
   entity_actuator: light.livingroom_floorlamps_couch
