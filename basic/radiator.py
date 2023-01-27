@@ -60,7 +60,10 @@ class RadiatorApp(appdaemon.plugins.hass.hassapi.Hass):
 
         if temperature > 0 and current_temperature < temperature:
             apparent_temperature = float(self.entity_radiator.get_state('current_temperature'))
-            target_temperature = temperature + max(0, 2 * (apparent_temperature - current_temperature))
+            target_temperature = temperature + max(
+                0,
+                2 * (apparent_temperature - current_temperature),
+            )
 
             self.logger.info('Offset corrected target temperature is %s.', target_temperature)
             self.entity_radiator.call_service('set_temperature', temperature=target_temperature)
