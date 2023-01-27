@@ -20,3 +20,6 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
 
     def call_service_ae(self, service: str, argument_name: str, **kwargs):
         self.call_service(service, entity_id=self.args[argument_name], **kwargs)
+
+    def toggle_ae(self, argument_name: str, **kwargs):
+        self.toggle(self.args[argument_name], **kwargs)

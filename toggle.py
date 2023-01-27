@@ -15,4 +15,4 @@ class ToggleApp(MyHomeAssistantApp):
         self.listen_state_ae(self.toggle_actuator, 'entity_sensor', new='single')
 
     def toggle_actuator(self, entity, attribute, old, new, kwargs):
-        self.entity_actuator.toggle()
+        self.toggle_ae('entity_actuator')
