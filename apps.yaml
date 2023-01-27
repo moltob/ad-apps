@@ -1,6 +1,11 @@
+info:
+  module: info
+  class: InfoApp
+
 radiator_attic:
   module: radiator
   class: RadiatorApp
+  global_dependencies: base
   entity_radiator: climate.attic_radiator
   entity_temperature: sensor.attic_climate_temperature
   entity_window: binary_sensor.attic_window_contact
