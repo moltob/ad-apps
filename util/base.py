@@ -12,6 +12,9 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
     they take the entity ID as indirect reference by an app argument.
     """
 
+    def listen_state_ae(self, callback, argument_name: str, **kwargs):
+        return self.listen_state(callback, self.args[argument_name], **kwargs)
+
     def get_state_ae(self, argument_name: str, *args, **kwargs) -> str:
         return t.cast(str, self.get_state(self.args[argument_name], *args, **kwargs))
 

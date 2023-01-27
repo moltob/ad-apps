@@ -8,7 +8,7 @@ PERIOD_MINUTES = 15
 
 class RadiatorApp(MyHomeAssistantApp):
     def initialize(self):
-        self.listen_state(self.control_radiator, self.args['entity_window'])
+        self.listen_state_ae(self.control_radiator, 'entity_window')
         self.run_every(self.control_radiator, 'now + 5', PERIOD_MINUTES * 60)
 
     def control_radiator(self, *args, **kwargs):
