@@ -1,22 +1,38 @@
 import appdaemon.plugins.hass.hassapi
 import typing as t
+import appdaemon.entity
 
 
 class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
-    """Base class exposing some utilities for AppDaemon apps.
+    """Base class exposing some utilities for AppDaemon apps."""
 
-    For convenience, some wrappers for base class methods are offered in an "ae" version, meaning
-    they take the entity ID as indirect reference by an app argument.
-    """
+    async def initialize(self):
+        """Initialize entities of derived class.
 
-    def listen_state_ae(self, callback, argument_name: str, **kwargs):
-        return self.listen_state(callback, self.args[argument_name], **kwargs)
+        Derived class is expected to define annotated attributes of type Entity, which are found in
+        thiis method and then their name is looked up in the app's argument dictionary. The value
+        there is then used as entity ID, which in turn results of a member attribute for that
+        entity.
+        """
+        entity_id_by_key = self.args['entities']
+        for key, type_ in self.__annotations__.items():
+            if type_ == appdaemon.entity.Entity:
+                if not (entity_id := entity_id_by_key.get(key)):
+                    self.logger.error(
+                        'App configuration YAML does not define required entity %r in entities '
+                        'dictionary.',
+                        key,
+                    )
+                    continue
 
-    def get_state_ae(self, argument_name: str, *args, **kwargs) -> str:
-        return t.cast(str, self.get_state(self.args[argument_name], *args, **kwargs))
+                entity = self.get_entity(entity_id)
 
-    def call_service_ae(self, service: str, argument_name: str, **kwargs):
-        self.call_service(service, entity_id=self.args[argument_name], **kwargs)
+                self.logger.debug('Initializing entity %r.', entity_id)
+                setattr(self, key, entity)
 
-    def toggle_ae(self, argument_name: str, **kwargs):
-        self.toggle(self.args[argument_name], **kwargs)
+                if not await entity.exists():
+                    self.logger.warning(
+                        'Entity %r not found (passed to app through %r).',
+                        entity_id,
+                        key,
+                    )
