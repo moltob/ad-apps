@@ -1,6 +1,5 @@
-import appdaemon.plugins.hass.hassapi
-import typing as t
 import appdaemon.entity
+import appdaemon.plugins.hass.hassapi
 
 
 class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):

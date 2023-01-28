@@ -1,6 +1,9 @@
 info:
   module: info
   class: InfoApp
+  global_dependencies: base
+  entities:
+    entity_batteries: input_text.all_batteries
 
 radiator_attic:
   module: radiator

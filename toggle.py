@@ -1,10 +1,7 @@
 """Toogle an entity after a switch was pushed."""
-import appdaemon.plugins.hass.hassapi
 import appdaemon.entity
 
-from util.base import MyHomeAssistantApp
-
-import appdaemon.entity
+from config.apps.util.base import MyHomeAssistantApp
 
 
 class ToggleApp(MyHomeAssistantApp):

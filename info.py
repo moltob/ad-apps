@@ -2,46 +2,37 @@
 
 import datetime
 
-import appdaemon.plugins.hass.hassapi
 import appdaemon.entity
+import appdaemon.plugins.hass.hassapi
+from config.apps.util.base import MyHomeAssistantApp
 
-BATTERY_ENTITIES_HELPER_NAME = 'input_text.mike_storage'
 
-
-class InfoApp(appdaemon.plugins.hass.hassapi.Hass):
+class InfoApp(MyHomeAssistantApp):
     """Collect system information and write it to helper entities.
 
-    For physical data, use sensore entities, for abstract data use input helpers. See also:
+    For physical data, use sensor entities, for abstract data use input helpers. See also:
     https://community.home-assistant.io/t/sensor-creation/39503.
     """
 
-    battery_entities_helper: appdaemon.entity.Entity = None
+    entity_batteries: appdaemon.entity.Entity
 
-    def initialize(self):
+    async def initialize(self):
+        await super().initialize()
+
         # compute entities on startup and then once a day:
         self.run_in(self.update_helper_entities, 0)
         self.run_daily(self.update_helper_entities, datetime.time(3))
 
-    def update_helper_entities(self, kwargs):
-        self.logger.info('Recomputing information helper entities.')
-
-        if not self.battery_entities_helper:
-            self.logger.debug(
-                'Attempting to get existing battery entities helper %r.',
-                BATTERY_ENTITIES_HELPER_NAME,
-            )
-            self.battery_entities_helper = self.get_entity(BATTERY_ENTITIES_HELPER_NAME)
-
-            if self.battery_entities_helper.exists():
-                self.logger.debug('Entity found.')
-            else:
-                self.logger.info('Entity not found, will create it.')
-
+    async def update_helper_entities(self, kwargs):
         battery_entity_ids = [
             s['entity_id']
-            for s in self.get_state().values()
+            for s in (await self.get_state()).values()
             if (c := s['attributes'].get('device_class')) and (c == 'battery')
         ]
-        self.logger.info('Found battery entities: %r', ', '.join(battery_entity_ids))
 
-        self.battery_entities_helper.set_state(state=battery_entity_ids)
+        self.logger.info(
+            'Setting batteries entity %r to: %r',
+            self.entity_batteries,
+            ', '.join(battery_entity_ids),
+        )
+        await self.entity_batteries.set_state(state=battery_entity_ids)

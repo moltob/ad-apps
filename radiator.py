@@ -1,8 +1,9 @@
 """Basic radiator control through external temperature sensor."""
 import datetime
 
-from util.base import MyHomeAssistantApp
 import appdaemon.entity
+
+from config.apps.util.base import MyHomeAssistantApp
 
 PERIOD_MINUTES = 15
 
