@@ -19,7 +19,17 @@ class RadiatorApp(MyHomeAssistantApp):
 
     async def initialize(self):
         await super().initialize()
-        await self.ent_window.listen_state(self.control_radiator)
+
+        for entity in (
+            self.ent_window,
+            self.ent_time_comfort_start,
+            self.ent_time_comfort_stop,
+            self.ent_time_comfort_stop,
+            self.ent_temperature_comfort,
+            self.ent_temperature_eco,
+        ):
+            await entity.listen_state(self.control_radiator)
+
         await self.run_every(self.control_radiator, 'now + 5', PERIOD_MINUTES * 60)
 
     async def control_radiator(self, *args, **kwargs):
@@ -30,18 +40,18 @@ class RadiatorApp(MyHomeAssistantApp):
 
         # check time if in eco or comfort mode:
         now = datetime.datetime.now().time()
-        comfort_start = datetime.time.fromisoformat(
-            await self.ent_time_comfort_start.get_state()
-        )
+        comfort_start = datetime.time.fromisoformat(await self.ent_time_comfort_start.get_state())
         comfort_stop = datetime.time.fromisoformat(await self.ent_time_comfort_stop.get_state())
 
         if comfort_start <= now < comfort_stop:
             await self.set_temperature(
-                float(await self.ent_temperature_comfort.get_state()), 'Comfort mode'
+                float(await self.ent_temperature_comfort.get_state()),
+                'Comfort mode',
             )
         else:
             await self.set_temperature(
-                float(await self.ent_temperature_eco.get_state()), 'Eco mode'
+                float(await self.ent_temperature_eco.get_state()),
+                'Eco mode',
             )
 
     async def set_temperature(self, target_temperature: float, reason: str):
