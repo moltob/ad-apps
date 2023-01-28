@@ -14,7 +14,7 @@ class InfoApp(MyHomeAssistantApp):
     https://community.home-assistant.io/t/sensor-creation/39503.
     """
 
-    entity_batteries: appdaemon.entity.Entity
+    ent_batteries: appdaemon.entity.Entity
 
     async def initialize(self):
         await super().initialize()
@@ -32,7 +32,7 @@ class InfoApp(MyHomeAssistantApp):
 
         self.logger.info(
             'Setting batteries entity %r to: %r',
-            self.entity_batteries,
+            self.ent_batteries,
             ', '.join(battery_entity_ids),
         )
-        await self.entity_batteries.set_state(state=battery_entity_ids)
+        await self.ent_batteries.set_state(state=battery_entity_ids)
