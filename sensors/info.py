@@ -3,8 +3,8 @@
 import datetime
 
 import appdaemon.entity
-import appdaemon.plugins.hass.hassapi
-from config.apps.util.base import MyHomeAssistantApp
+
+from util.base import MyHomeAssistantApp
 
 
 class InfoApp(MyHomeAssistantApp):

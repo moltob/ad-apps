@@ -1,7 +1,7 @@
 """Toogle an entity after a switch was pushed."""
 import appdaemon.entity
 
-from config.apps.util.base import MyHomeAssistantApp
+from util.base import MyHomeAssistantApp
 
 
 class ToggleApp(MyHomeAssistantApp):
