@@ -3,7 +3,7 @@ import datetime
 
 import appdaemon.entity
 
-from config.apps.util.base import MyHomeAssistantApp
+from util.base import MyHomeAssistantApp
 
 PERIOD_MINUTES = 15
 
