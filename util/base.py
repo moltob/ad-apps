@@ -41,13 +41,6 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
                         key,
                     )
 
-        # prepare for applications to dispatch triggers to if not done before, race conditions not
-        # possible during initialization as those functions are called synchronously:
-        if not MyHomeAssistantApp.trigger_handle:
-            MyHomeAssistantApp.trigger_handle = await self.listen_event(
-                self._dispatch_trigger_to_app,
-                'ad_trigger',
-            )
 
     async def terminate(self):
         # all events are cancelled, so we have to reregister during next initialization:
@@ -65,6 +58,17 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
         # propagate the trigger to application instance:
         await callback()
 
-    def listen_application_trigger_event(self, callback: t.Callable):
-        """Register for callback into given callable."""
+    async def listen_application_trigger_event(self, callback: t.Callable):
+        """Register for callback into given callable.
+
+        This method must be called in a synchronous way, i.e. during app initialization.
+        """
+        # remember callback to invoke for current app:
         self.trigger_dispatch_table[self.name] = callback
+
+        # register event listener, if this is the first one:
+        if not MyHomeAssistantApp.trigger_handle:
+            MyHomeAssistantApp.trigger_handle = await self.listen_event(
+                self._dispatch_trigger_to_app,
+                'ad_trigger',
+            )

@@ -19,7 +19,7 @@ class RadiatorApp(MyHomeAssistantApp):
 
     async def initialize(self):
         await super().initialize()
-        self.listen_application_trigger_event(self.control_radiator)
+        await self.listen_application_trigger_event(self.control_radiator)
 
         for entity in (
             self.ent_window,
