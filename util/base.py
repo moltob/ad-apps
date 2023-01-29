@@ -9,7 +9,7 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
         """Initialize entities of derived class.
 
         Derived class is expected to define annotated attributes of type Entity, which are found in
-        thiis method and then their name is looked up in the app's argument dictionary. The value
+        this method and then their name is looked up in the app's argument dictionary. The value
         there is then used as entity ID, which in turn results of a member attribute for that
         entity.
         """
