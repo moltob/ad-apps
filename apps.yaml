@@ -25,8 +25,8 @@ toggle_diningroom_light_left:
   class: ActionToggleApp
   global_dependencies: base
   entities:
-      ent_sensor: sensor.diningroom_switch_lights_action
-      ent_actuator: switch.diningroom_light_left
+    ent_sensor: sensor.diningroom_switch_lights_action
+    ent_actuator: switch.diningroom_light_left
   sensor_action: single_left
 
 toggle_diningroom_light_right:
@@ -34,26 +34,26 @@ toggle_diningroom_light_right:
   class: ActionToggleApp
   global_dependencies: base
   entities:
-      ent_sensor: sensor.diningroom_switch_lights_action
-      ent_actuator: switch.diningroom_light_right
+    ent_sensor: sensor.diningroom_switch_lights_action
+    ent_actuator: switch.diningroom_light_right
   sensor_action: single_right
-
-toggle_dressingroom_balllight:
-  module: toggle
-  class: ActionToggleApp
-  global_dependencies: base
-  entities:
-      ent_sensor: sensor.dressingroom_switch_lights_attic_action
-      ent_actuator: light.attic_balllight
-  sensor_action: single_left
 
 toggle_dressingroom_lamp_shelf:
   module: toggle
   class: ActionToggleApp
   global_dependencies: base
   entities:
-      ent_sensor: sensor.dressingroom_switch_lights_attic_action
-      ent_actuator: light.attic_lamp_shelf
+    ent_sensor: sensor.dressingroom_switch_lights_attic_action
+    ent_actuator: light.attic_lamp_shelf
+  sensor_action: single_left
+
+toggle_dressingroom_balllight:
+  module: toggle
+  class: ActionToggleApp
+  global_dependencies: base
+  entities:
+    ent_sensor: sensor.dressingroom_switch_lights_attic_action
+    ent_actuator: light.attic_balllight
   sensor_action: single_right
 
 toggle_livingroom_floorlamps_couch:
@@ -61,5 +61,5 @@ toggle_livingroom_floorlamps_couch:
   class: ActionToggleApp
   global_dependencies: base
   entities:
-      ent_sensor: sensor.livingroom_switch_floorlamps_couch_action
-      ent_actuator: light.livingroom_floorlamps_couch
+    ent_sensor: sensor.livingroom_switch_floorlamps_couch_action
+    ent_actuator: light.livingroom_floorlamps_couch
