@@ -20,6 +20,19 @@ radiator_attic:
     ent_temperature_comfort: input_number.attic_temperature_comfort
     ent_temperature_eco: input_number.attic_temperature_eco
 
+radiator_guestbath:
+  module: radiator
+  class: RadiatorApp
+  global_dependencies: base
+  entities:
+    ent_radiator: climate.guestbath_radiator
+    ent_temperature: sensor.guestbath_climate_temperature
+    ent_window: binary_sensor.guestbath_window_contact
+    ent_time_comfort_start: input_datetime.guestbath_time_comfort_start
+    ent_time_comfort_stop: input_datetime.guestbath_time_comfort_stop
+    ent_temperature_comfort: input_number.guestbath_temperature_comfort
+    ent_temperature_eco: input_number.guestbath_temperature_eco
+
 toggle_diningroom_light_left:
   module: toggle
   class: ActionToggleApp
