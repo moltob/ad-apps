@@ -7,8 +7,7 @@ import appdaemon.plugins.hass.hassapi
 class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
     """Base class exposing some utilities for AppDaemon apps."""
 
-    trigger_dispatch_table: dict[str, t.Callable] = {}
-    trigger_handle = None
+    app_trigger_dispatcher: t.Optional['AppTriggerDispatcher'] = None
 
     async def initialize(self):
         """Initialize entities of derived class.
@@ -41,14 +40,47 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
                         key,
                     )
 
+    async def terminate(self):
+        # reference and event registration invalidated:
+        self.app_trigger_dispatcher = None
+
+    async def listen_application_trigger_event(self, callback: t.Callable):
+        """Register for trigger callback into given application callable.
+
+        This method must be called in a sequential way, i.e. during app initialization.
+        """
+        if not self.app_trigger_dispatcher:
+            self.app_trigger_dispatcher = await self.get_app('dispatcher')
+
+        await self.app_trigger_dispatcher.listen_application_trigger_event(self.name, callback)
+
+
+class AppTriggerDispatcher(appdaemon.plugins.hass.hassapi.Hass):
+    """Singleton application receiving application trigger events and dispatching them."""
+
+    trigger_dispatch_table: dict[str, t.Callable]
+    trigger_handle = None
+
+    async def initialize(self):
+        # listen to the generic application trigger event:
+        self.trigger_dispatch_table = {}
+        self.trigger_handle = await self.listen_event(
+            self._dispatch_trigger_to_app,
+            'ad_trigger',
+        )
 
     async def terminate(self):
         # all events are cancelled, so we have to reregister during next initialization:
-        MyHomeAssistantApp.trigger_handle = None
+        self.trigger_handle = None
+
+    async def listen_application_trigger_event(self, app_name: str, callback: t.Callable):
+        """Register for trigger callback into given application callable."""
+        # remember callback to invoke for current app:
+        self.trigger_dispatch_table[app_name] = callback
 
     async def _dispatch_trigger_to_app(self, event_name: str, data: dict, kwargs):
         if not (app_name := data.get('name')):
-            self.logger.error('Received app trigger, but name is missing.')
+            self.logger.error('Received app trigger, but name is missing in event data: %r', data)
             return
 
         if not (callback := self.trigger_dispatch_table.get(app_name)):
@@ -57,18 +89,3 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
 
         # propagate the trigger to application instance:
         await callback()
-
-    async def listen_application_trigger_event(self, callback: t.Callable):
-        """Register for callback into given callable.
-
-        This method must be called in a synchronous way, i.e. during app initialization.
-        """
-        # remember callback to invoke for current app:
-        self.trigger_dispatch_table[self.name] = callback
-
-        # register event listener, if this is the first one:
-        if not MyHomeAssistantApp.trigger_handle:
-            MyHomeAssistantApp.trigger_handle = await self.listen_event(
-                self._dispatch_trigger_to_app,
-                'ad_trigger',
-            )
