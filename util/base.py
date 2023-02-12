@@ -17,28 +17,28 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
         there is then used as entity ID, which in turn results of a member attribute for that
         entity.
         """
-        entity_id_by_key = self.args['entities']
-        for key, type_ in self.__annotations__.items():
-            if type_ == appdaemon.entity.Entity:
-                if not (entity_id := entity_id_by_key.get(key)):
-                    self.logger.error(
-                        'App configuration YAML does not define required entity %r in entities '
-                        'dictionary.',
-                        key,
-                    )
-                    continue
+        if entity_id_by_key := self.args.get('entities'):
+            for key, type_ in self.__annotations__.items():
+                if type_ == appdaemon.entity.Entity:
+                    if not (entity_id := entity_id_by_key.get(key)):
+                        self.logger.error(
+                            'App configuration YAML does not define required entity %r in entities '
+                            'dictionary.',
+                            key,
+                        )
+                        continue
 
-                entity = self.get_entity(entity_id)
+                    entity = self.get_entity(entity_id)
 
-                self.logger.debug('Initializing entity %r.', entity_id)
-                setattr(self, key, entity)
+                    self.logger.debug('Initializing entity %r.', entity_id)
+                    setattr(self, key, entity)
 
-                if not await entity.exists():
-                    self.logger.warning(
-                        'Entity %r not found (passed to app through %r).',
-                        entity_id,
-                        key,
-                    )
+                    if not await entity.exists():
+                        self.logger.warning(
+                            'Entity %r not found (passed to app through %r).',
+                            entity_id,
+                            key,
+                        )
 
     async def terminate(self):
         # reference and event registration invalidated:

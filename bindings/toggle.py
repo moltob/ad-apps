@@ -29,3 +29,30 @@ class ActionToggleApp(MyHomeAssistantApp):
             self.ent_actuator.name,
         )
         await self.ent_actuator.toggle()
+
+
+class WelcomeLightApp(MyHomeAssistantApp):
+    """Turn on light at arrival."""
+
+    async def initialize(self):
+        await super().initialize()
+
+        persons = [
+            self.get_entity('person.britta_pagel'),
+            self.get_entity('person.mike_pagel'),
+        ]
+
+        for person in persons:
+            await person.listen_state(self.turn_lights_on, new='home')
+            self.logger.info('Binding welcome light to arrival of %r.', person.name)
+
+        await self.listen_application_trigger_event(self.turn_lights_on)
+
+    async def turn_lights_on(self, *args, **kwargs):
+        if args:
+            self.logger.info('Welcome %r.', args[0])
+
+        light = self.get_entity('light.livingroom_floorlamps_couch')
+        await light.turn_on(effect='breathe')
+        await self.sleep(3)
+        await light.turn_on(effect='finish_effect')

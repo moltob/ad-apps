@@ -78,3 +78,10 @@ toggle_livingroom_floorlamps_couch:
   entities:
     ent_sensor: sensor.livingroom_switch_floorlamps_couch_action
     ent_actuator: light.livingroom_floorlamps_couch
+
+welcome_lights:
+  module: toggle
+  class: WelcomeLightApp
+  dependencies: dispatcher
+  constrain_start_time: sunset
+  constrain_end_time: sunrise
