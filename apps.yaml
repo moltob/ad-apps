@@ -87,5 +87,6 @@ welcome_lights:
   constrain_end_time: sunrise
   entities:
     ent_light: light.livingroom_floorlamps_couch
-    ent_person_1: person.britta_pagel
-    ent_person_2: person.mike_pagel
+    ent_persons:
+      - person.britta_pagel
+      - person.mike_pagel

@@ -28,17 +28,37 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
                         )
                         continue
 
-                    entity = self.get_entity(entity_id)
+                    setattr(self, key, await self._get_entity(key, entity_id))
 
-                    self.logger.debug('Initializing entity %r.', entity_id)
-                    setattr(self, key, entity)
-
-                    if not await entity.exists():
-                        self.logger.warning(
-                            'Entity %r not found (passed to app through %r).',
-                            entity_id,
+                elif type_ == list[appdaemon.entity.Entity]:
+                    if not (entity_ids := entity_id_by_key.get(key)):
+                        self.logger.error(
+                            'App configuration YAML does not define required entities list %r in '
+                            'entities dictionary.',
                             key,
                         )
+                        continue
+
+                    setattr(
+                        self,
+                        key,
+                        [await self._get_entity(key, entity_id) for entity_id in entity_ids],
+                    )
+
+    async def _get_entity(self, name: str, entity_id: str) -> appdaemon.entity.Entity:
+        """Get entity with given ID from named argument."""
+        entity = self.get_entity(entity_id)
+
+        self.logger.debug('Initializing entity %r.', entity_id)
+
+        if not await entity.exists():
+            self.logger.warning(
+                'Entity %r not found (passed to app through argument %r).',
+                entity_id,
+                name,
+            )
+
+        return entity
 
     async def terminate(self):
         # reference and event registration invalidated:

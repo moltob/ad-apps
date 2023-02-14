@@ -35,15 +35,14 @@ class WelcomeLightApp(MyHomeAssistantApp):
     """Turn on light at arrival."""
 
     ent_light: appdaemon.entity.Entity
-    ent_person_1: appdaemon.entity.Entity
-    ent_person_2: appdaemon.entity.Entity
+    ent_persons: list[appdaemon.entity.Entity]
 
     async def initialize(self):
         await super().initialize()
 
-        for person in (self.ent_person_1, self.ent_person_2):
+        for person in self.ent_persons:
             await person.listen_state(self.turn_lights_on, new='home')
-            self.logger.info('Binding welcome light to arrival of %r.', person.name)
+            self.logger.info('Binding welcome light to arrival of %r.', person.entity_id)
 
         await self.listen_application_trigger_event(self.turn_lights_on)
 
