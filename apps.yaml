@@ -9,6 +9,16 @@ dispatcher:
 #  entities:
 #    ent_batteries: input_text.all_batteries
 
+multi_toggle_attic_lights:
+  module: toggle
+  class: MultiLightToggleApp
+  dependencies: dispatcher
+  entities:
+    ent_switch: sensor.attic_switch_lights_action
+    ent_lights:
+      - light.attic_balllight
+      - light.attic_lamp_shelf
+
 radiator_attic:
   module: radiator
   class: RadiatorApp
@@ -34,14 +44,6 @@ radiator_guestbath:
     ent_time_comfort_stop: input_datetime.guestbath_time_comfort_stop
     ent_temperature_comfort: input_number.guestbath_temperature_comfort
     ent_temperature_eco: input_number.guestbath_temperature_eco
-
-toggle_attic_lamp_shelf:
-  module: toggle
-  class: ActionToggleApp
-  dependencies: dispatcher
-  entities:
-    ent_sensor: sensor.attic_switch_lights_action
-    ent_actuator: light.attic_lamp_shelf
 
 toggle_diningroom_light_left:
   module: toggle
