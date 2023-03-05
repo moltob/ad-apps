@@ -61,7 +61,7 @@ class RadiatorApp(MyHomeAssistantApp):
 
         if target_temperature > 0 and actual_temperature < target_temperature:
             offset = max(0.0, 2 * (apparent_temperature - actual_temperature))
-            set_temperature = target_temperature + offset
+            set_temperature = int(round(target_temperature + offset, 0))
         else:
             set_temperature = 0
 
