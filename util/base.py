@@ -98,7 +98,7 @@ class AppTriggerDispatcher(appdaemon.plugins.hass.hassapi.Hass):
         # remember callback to invoke for current app:
         self.trigger_dispatch_table[app_name] = callback
 
-    async def _dispatch_trigger_to_app(self, event_name: str, data: dict, kwargs):
+    async def _dispatch_trigger_to_app(self, event_name: str, data: dict, *args, **kwargs):
         if not (app_name := data.get('name')):
             self.logger.error('Received app trigger, but name is missing in event data: %r', data)
             return

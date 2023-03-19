@@ -2,12 +2,12 @@ dispatcher:
   module: base
   class: AppTriggerDispatcher
 
-#info:
-#  module: info
-#  class: InfoApp
-#  dependencies: dispatcher
-#  entities:
-#    ent_batteries: input_text.all_batteries
+info:
+ module: info
+ class: InfoApp
+ dependencies: dispatcher
+ entities:
+   ent_batteries: input_text.all_batteries
 
 multi_toggle_attic_lights:
   module: toggle
@@ -100,3 +100,31 @@ welcome_lights:
     ent_persons:
       - person.britta_pagel
       - person.mike_pagel
+
+dryer_observer:
+  module: power
+  class: PowerObserverApp
+  dependencies: dispatcher
+  entities:
+    ent_power: sensor.laundry_dryer_power
+  power:
+    min: 0
+    max: 6
+    minutes: 1
+  notify:
+    title: Trocker
+    message: Der Trockner ist fertig.
+
+washer_observer:
+  module: power
+  class: PowerObserverApp
+  dependencies: dispatcher
+  entities:
+    ent_power: sensor.laundry_washer_power
+  power:
+    min: 3
+    max: 6
+    minutes: 1
+  notify:
+    title: Waschmaschine
+    message: Die Waschmaschine ist fertig.

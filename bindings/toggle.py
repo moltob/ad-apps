@@ -22,7 +22,7 @@ class ActionToggleApp(MyHomeAssistantApp):
             self.toggle_actuator, new=self.args.get('sensor_action', 'single')
         )
 
-    async def toggle_actuator(self, entity, attribute, old, new, kwargs):
+    async def toggle_actuator(self, entity, attribute, old, new, *args, **kwargs):
         self.logger.info(
             '%r was pushed, toggeling %r.',
             self.ent_sensor.name,
@@ -77,7 +77,7 @@ class MultiLightToggleApp(MyHomeAssistantApp):
         await self.ent_switch.listen_state(self.switch_to_next_light, new='single')
         await self.ent_switch.listen_state(self.toggle_all_lights, new='double')
 
-    async def switch_to_next_light(self, entity, attribute, old, new, kwargs):
+    async def switch_to_next_light(self, entity, attribute, old, new, *args, **kwargs):
         if (current_index := await self.get_first_lit_index()) is not None:
             next_index = (current_index + 1) % len(self.ent_lights)
         else:
@@ -95,7 +95,7 @@ class MultiLightToggleApp(MyHomeAssistantApp):
                 await light.turn_off()
 
 
-    async def toggle_all_lights(self, entity, attribute, old, new, kwargs):
+    async def toggle_all_lights(self, entity, attribute, old, new, *args, **kwargs):
         if await self.get_first_lit_index() is None:
             service = 'turn_on'
         else:

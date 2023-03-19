@@ -23,7 +23,7 @@ class InfoApp(MyHomeAssistantApp):
         self.run_in(self.update_helper_entities, 0)
         self.run_daily(self.update_helper_entities, datetime.time(3))
 
-    async def update_helper_entities(self, kwargs):
+    async def update_helper_entities(self, *args, **kwargs):
         battery_entity_ids = [
             s['entity_id']
             for s in (await self.get_state()).values()

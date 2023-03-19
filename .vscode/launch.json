@@ -9,7 +9,16 @@
             "type": "python",
             "request": "launch",
             "module": "appdaemon",
-            "args": ["--config", "config"],
+            "args": [
+                "--config",
+                "config",
+                "-m",
+                "washer_observer",
+                "DEBUG",
+                "-m",
+                "dryer_observer",
+                "DEBUG"
+            ],
             "cwd": "${workspaceFolder}/../..",
             "console": "integratedTerminal",
             "justMyCode": true,
