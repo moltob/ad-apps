@@ -2,13 +2,6 @@ dispatcher:
   module: base
   class: AppTriggerDispatcher
 
-info:
- module: info
- class: InfoApp
- dependencies: dispatcher
- entities:
-   ent_batteries: input_text.all_batteries
-
 multi_toggle_attic_lights:
   module: toggle
   class: MultiLightToggleApp
