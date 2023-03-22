@@ -101,9 +101,9 @@ dryer_observer:
   entities:
     ent_power: sensor.laundry_dryer_power
   power:
-    min: 0
-    max: 6
-    minutes: 1
+    active: 500
+    done: 10
+    duration_done: 1
   notify:
     title: Trocker
     message: Der Trockner ist fertig.
@@ -115,9 +115,9 @@ washer_observer:
   entities:
     ent_power: sensor.laundry_washer_power
   power:
-    min: 3
-    max: 6
-    minutes: 1
+    active: 1000
+    done: 20
+    duration_done: 1
   notify:
     title: Waschmaschine
     message: Die Waschmaschine ist fertig.

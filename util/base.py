@@ -72,6 +72,7 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
         if not self.app_trigger_dispatcher:
             self.app_trigger_dispatcher = await self.get_app('dispatcher')
 
+        assert self.app_trigger_dispatcher
         await self.app_trigger_dispatcher.listen_application_trigger_event(self.name, callback)
 
 
