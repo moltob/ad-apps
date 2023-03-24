@@ -22,6 +22,8 @@ class PowerObserverApp(MyHomeAssistantApp):
     state: DeviceState
     state_entered: datetime.datetime
 
+    done_timer_handle: str | None
+
     async def initialize(self):
         await super().initialize()
 
@@ -31,16 +33,23 @@ class PowerObserverApp(MyHomeAssistantApp):
 
         self.state = DeviceState.OFF
         self.state_entered = datetime.datetime.now()
+        self.done_timer_handle = None
 
         await self.ent_power.listen_state(self.process_power_change)
 
-    def _enter_state(self, state: DeviceState, power: float):
+    async def _enter_state(self, state: DeviceState, power: float):
+        # switching state will cancel the timer if running:
+        if self.done_timer_handle:
+            await self.cancel_timer(self.done_timer_handle, silent=True)
+            self.done_timer_handle = None
+
         self.logger.info(
             'Switching from state %r to %r at %.2f W.',
             self.state.value,
             state.value,
             power,
         )
+
         self.state = state
         self.state_entered = datetime.datetime.now()
 
@@ -56,24 +65,28 @@ class PowerObserverApp(MyHomeAssistantApp):
             )
             return
 
+        async def notify_done():
+            self.logger.info('Target interval entered long enough for trigger condition.')
+            await self._enter_state(DeviceState.OFF, power)
+            await self.call_service(
+                "notify/notify",
+                title=self.args['notify']['title'],
+                message=self.args['notify']['message'],
+            )
+
         match self.state:
             case DeviceState.OFF:
                 if power > self.power_active:
-                    self._enter_state(DeviceState.RUNNING, power)
+                    await self._enter_state(DeviceState.RUNNING, power)
 
             case DeviceState.RUNNING:
                 if power <= self.power_done:
-                    self._enter_state(DeviceState.ALMOST_DONE, power)
+                    await self._enter_state(DeviceState.ALMOST_DONE, power)
+                    self.done_timer_handle = await self.run_in(
+                        notify_done,
+                        self.duration_done.total_seconds,
+                    )
 
             case DeviceState.ALMOST_DONE:
                 if power > self.power_done:
-                    self._enter_state(DeviceState.RUNNING, power)
-
-                elif now - self.state_entered > self.duration_done:
-                    self.logger.info('Target interval entered long enough for trigger condition.')
-                    await self.call_service(
-                        "notify/notify",
-                        title=self.args['notify']['title'],
-                        message=self.args['notify']['message'],
-                    )
-                    self._enter_state(DeviceState.OFF, power)
+                    await self._enter_state(DeviceState.RUNNING, power)
