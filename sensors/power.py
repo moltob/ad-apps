@@ -84,7 +84,7 @@ class PowerObserverApp(MyHomeAssistantApp):
                     await self._enter_state(DeviceState.ALMOST_DONE, power)
                     self.done_timer_handle = await self.run_in(
                         notify_done,
-                        self.duration_done.total_seconds,
+                        self.duration_done.total_seconds(),
                     )
 
             case DeviceState.ALMOST_DONE:
