@@ -54,6 +54,7 @@ class PowerObserverApp(MyHomeAssistantApp):
                 'Power value %.2f ignored as it is out of reasonable operation range.',
                 power,
             )
+            return
 
         match self.state:
             case DeviceState.OFF:
