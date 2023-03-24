@@ -44,6 +44,8 @@ class WelcomeLightApp(MyHomeAssistantApp):
             await person.listen_state(self.turn_lights_on, new='home')
             self.logger.info('Binding welcome light to arrival of %r.', person.entity_id)
 
+        self.logger.info('Next sunset is at %s.', await self.sunset())
+
         await self.listen_application_trigger_event(self.turn_lights_on)
 
     async def turn_lights_on(self, *args, **kwargs):
