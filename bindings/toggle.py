@@ -27,7 +27,7 @@ class ActionToggleApp(MyHomeAssistantApp):
             '%r was pushed, toggeling %r. Current state was %r.',
             self.ent_sensor.name,
             self.ent_actuator.name,
-            self.ent_actuator.state,
+            await self.ent_actuator.get_state(),
         )
         await self.ent_actuator.toggle()
 
