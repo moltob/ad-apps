@@ -23,10 +23,13 @@ class ActionToggleApp(MyHomeAssistantApp):
         )
 
     async def toggle_actuator(self, entity, attribute, old, new, *args, **kwargs):
+        current_actuator_state = await self.ent_actuator.state
+
         self.logger.info(
-            '%r was pushed, toggeling %r.',
+            '%r was pushed, toggeling %r. Current state was %r.',
             self.ent_sensor.name,
             self.ent_actuator.name,
+            current_actuator_state,
         )
         await self.ent_actuator.toggle()
 
@@ -95,7 +98,6 @@ class MultiLightToggleApp(MyHomeAssistantApp):
             else:
                 self.logger.debug('Switching off %r.', light.entity_id)
                 await light.turn_off()
-
 
     async def toggle_all_lights(self, entity, attribute, old, new, *args, **kwargs):
         if await self.get_first_lit_index() is None:
