@@ -23,13 +23,11 @@ class ActionToggleApp(MyHomeAssistantApp):
         )
 
     async def toggle_actuator(self, entity, attribute, old, new, *args, **kwargs):
-        current_actuator_state = await self.ent_actuator.state
-
         self.logger.info(
             '%r was pushed, toggeling %r. Current state was %r.',
             self.ent_sensor.name,
             self.ent_actuator.name,
-            current_actuator_state,
+            self.ent_actuator.state,
         )
         await self.ent_actuator.toggle()
 
