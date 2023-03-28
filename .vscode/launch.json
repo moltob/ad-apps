@@ -13,10 +13,7 @@
                 "--config",
                 "config",
                 "-m",
-                "washer_observer",
-                "DEBUG",
-                "-m",
-                "dryer_observer",
+                "timer_guest_room_light_night_stand",
                 "DEBUG"
             ],
             "cwd": "${workspaceFolder}/../..",
