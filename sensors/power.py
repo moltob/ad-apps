@@ -68,8 +68,10 @@ class PowerObserverApp(MyHomeAssistantApp):
         async def notify_done(app_, **kwargs):
             self.logger.info('Target interval entered long enough for trigger condition.')
             await self._enter_state(DeviceState.OFF, power)
+
+            service = self.args['notify'].get('service', 'notify')
             await self.call_service(
-                "notify/notify",
+                f'notify/{service}',
                 title=self.args['notify']['title'],
                 message=self.args['notify']['message'],
             )

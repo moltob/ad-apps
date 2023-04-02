@@ -119,6 +119,7 @@ washer_observer:
     done: 20
     duration_done: 5
   notify:
+    service: whatsapp_all
     title: Waschmaschine
     message: Die Waschmaschine ist fertig.
 
