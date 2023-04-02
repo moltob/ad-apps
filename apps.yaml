@@ -105,6 +105,7 @@ dryer_observer:
     done: 10
     duration_done: 1
   notify:
+    service: whatsapp_all
     title: Trocker
     message: Der Trockner ist fertig.
 
