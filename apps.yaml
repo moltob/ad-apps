@@ -117,7 +117,7 @@ washer_observer:
   power:
     active: 1000
     done: 20
-    duration_done: 1
+    duration_done: 5
   notify:
     title: Waschmaschine
     message: Die Waschmaschine ist fertig.
