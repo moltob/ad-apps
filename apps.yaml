@@ -124,7 +124,16 @@ washer_observer:
     title: Waschmaschine
     message: Die Waschmaschine ist fertig.
 
-# timer_guest_room_light_night_stand:
+timer_guestbath_light:
+  module: toggle
+  class: TimerApp
+  dependencies: dispatcher
+  entities:
+    ent_actuator: light.guestbath_light
+  minutes: 1
+
+
+# timer_guestroom_light_night_stand:
 #   module: toggle
 #   class: TimerApp
 #   dependencies: dispatcher
