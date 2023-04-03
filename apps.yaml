@@ -130,7 +130,7 @@ timer_guestbath_light:
   dependencies: dispatcher
   entities:
     ent_actuator: light.guestbath_light
-  minutes: 1
+  minutes: 15
 
 
 # timer_guestroom_light_night_stand:

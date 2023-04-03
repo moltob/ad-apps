@@ -143,16 +143,16 @@ class TimerApp(MyHomeAssistantApp):
         await self.ent_actuator.listen_state(self.actuator_turned_off, new='off')
 
     async def actuator_turned_on(self, *args, **kwargs):
-        self.logger.info('%r was turned on.', self.ent_actuator.name)
+        self.logger.info('%r was turned on.', self.ent_actuator.entity_id)
         self.timeout_handle = await self.run_in(self.timeout_expired, self.timeout.total_seconds())
 
     async def timeout_expired(self, *args, **kwargs):
-        self.logger.info('Timeout expired turning off %r.', self.ent_actuator.name)
+        self.logger.info('Timeout expired turning off %r.', self.ent_actuator.entity_id)
         self.timeout_handle = None
         await self.ent_actuator.turn_off()
 
     async def actuator_turned_off(self, *args, **kwargs):
-        self.logger.info('%r was turned off.', self.ent_actuator.name)
+        self.logger.info('%r was turned off.', self.ent_actuator.entity_id)
 
         if self.timeout_handle:
             await self.cancel_timer(self.timeout_handle)
