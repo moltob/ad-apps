@@ -54,6 +54,9 @@ class PowerObserverApp(MyHomeAssistantApp):
         self.state_entered = datetime.datetime.now()
 
     async def process_power_change(self, entity, attribute, old, new, *args, **kwargs):
+        if new == 'unavailable':
+            return
+
         power = float(new)
         now = datetime.datetime.now()
 
