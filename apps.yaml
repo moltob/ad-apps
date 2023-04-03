@@ -118,16 +118,16 @@ washer_observer:
   power:
     active: 1000
     done: 20
-    duration_done: 5
+    duration_done: 1.5
   notify:
     service: whatsapp_all
     title: Waschmaschine
     message: Die Waschmaschine ist fertig.
 
-timer_guest_room_light_night_stand:
-  module: toggle
-  class: TimerApp
-  dependencies: dispatcher
-  entities:
-    ent_actuator: light.guestroom_lamp_nightstand
-  minutes: 45
+# timer_guest_room_light_night_stand:
+#   module: toggle
+#   class: TimerApp
+#   dependencies: dispatcher
+#   entities:
+#     ent_actuator: light.guestroom_lamp_nightstand
+#   minutes: 45
