@@ -10,7 +10,7 @@ multi_toggle_attic_lights:
     ent_switch: sensor.attic_switch_lights_action
     ent_lights:
       - light.attic_balllight
-      - switch.attic_lamp_shelf
+      - light.attic_lamp_shelf
 
 radiator_attic:
   module: radiator
@@ -44,7 +44,7 @@ toggle_diningroom_light_left:
   dependencies: dispatcher
   entities:
     ent_sensor: sensor.diningroom_switch_lights_action
-    ent_actuator: switch.diningroom_light_left
+    ent_actuator: light.diningroom_light_left
   sensor_action: single_left
 
 toggle_diningroom_light_right:
@@ -53,7 +53,7 @@ toggle_diningroom_light_right:
   dependencies: dispatcher
   entities:
     ent_sensor: sensor.diningroom_switch_lights_action
-    ent_actuator: switch.diningroom_light_right
+    ent_actuator: light.diningroom_light_right
   sensor_action: single_right
 
 toggle_dressingroom_lamp_shelf:
@@ -62,7 +62,7 @@ toggle_dressingroom_lamp_shelf:
   dependencies: dispatcher
   entities:
     ent_sensor: sensor.dressingroom_switch_lights_attic_action
-    ent_actuator: switch.attic_lamp_shelf
+    ent_actuator: light.attic_lamp_shelf
   sensor_action: single_left
 
 toggle_dressingroom_balllight:
