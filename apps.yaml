@@ -148,10 +148,10 @@ timer_groundfloor_light:
     ent_actuator: light.ground_floor_light
   minutes: 10
 
-# timer_guestroom_light_night_stand:
-#   module: toggle
-#   class: TimerApp
-#   dependencies: dispatcher
-#   entities:
-#     ent_actuator: light.guestroom_lamp_nightstand
-#   minutes: 45
+timer_guestroom_light_night_stand:
+  module: toggle
+  class: TimerApp
+  dependencies: dispatcher
+  entities:
+    ent_actuator: light.guestroom_lamp_nightstand
+  minutes: 120
