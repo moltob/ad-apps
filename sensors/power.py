@@ -40,7 +40,7 @@ class PowerObserverApp(MyHomeAssistantApp):
     async def _enter_state(self, state: DeviceState, power: float):
         # switching state will cancel the timer if running:
         if self.done_timer_handle:
-            await self.cancel_timer(self.done_timer_handle)
+            await self.cancel_timer(self.done_timer_handle, True)
             self.done_timer_handle = None
 
         self.logger.info(
