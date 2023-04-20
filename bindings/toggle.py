@@ -141,6 +141,7 @@ class TimerApp(MyHomeAssistantApp):
 
         await self.ent_actuator.listen_state(self.actuator_turned_on, new='on')
         await self.ent_actuator.listen_state(self.actuator_turned_off, new='off')
+        await self.ent_actuator.listen_state(self.actuator_turned_off, new='unavailable')
 
     async def actuator_turned_on(self, *args, **kwargs):
         self.logger.info('%r was turned on.', self.ent_actuator.entity_id)
