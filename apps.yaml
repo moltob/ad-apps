@@ -138,7 +138,7 @@ timer_firstfloor_light:
   dependencies: dispatcher
   entities:
     ent_actuator: light.first_floor_light
-  minutes: 2
+  minutes: 3
 
 timer_groundfloor_light:
   module: toggle
