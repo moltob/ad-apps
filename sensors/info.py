@@ -19,7 +19,7 @@ class InfoApp(MyHomeAssistantApp):
     async def initialize(self):
         await super().initialize()
 
-        # compute entities on startup and then once a day:
+        # compute entities on startup and then periodically:
         self.run_in(self.update_helper_entities, 0)
         self.run_daily(self.update_helper_entities, datetime.time(3))
 
