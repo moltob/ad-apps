@@ -1,4 +1,4 @@
-"""Watchdog observing last_seen attribute of sensors."""
+"""Watchdog observing device status."""
 
 import datetime
 
@@ -7,40 +7,40 @@ import appdaemon.plugins.mqtt.mqttapi
 
 from util.base import MyHomeAssistantApp
 
+TOPIC = 'zigbee2mqtt/+/availability'
+"""Topic yielding devices' availability status."""
 
-class LastSeenApp(appdaemon.plugins.mqtt.mqttapi.Mqtt):
-    """Watchdog of last_seen attribute of sensors.
+PLUGIN_NAMESPACE = 'mqtt'
+"""Namespace of the AD MQTT plugin, set in `appdaemon.yaml`."""
 
-    If a sensor has not been seen for a configurable amount of time, a notification is raised. Note
-    that this is a real error condition, as usually unexpected, e.g. after power loss.
+MQTT_EVEN_NAME = 'MQTT_MESSAGE'
+"""Name of MQTT message events."""
 
-    This might happen unnoticed for MQTT-based entities.
+DEVICE_UNAVAILABLE_PAYLOAD = '{"state":"offline"}'
+"""Event payload of an offline device."""
 
-    Remarks:
 
-        The code below requires that the last_seen entities are enabled. Unfortunately, they are disabled by
-        default.
+class NotifyOfflineApp(appdaemon.plugins.mqtt.mqttapi.Mqtt):
+    """Watchdog detecting offline Zigbee2Mqtt devices.
 
-        Docs usggest to use device availability instead. But this does not work, the device appears to be available...
-
+    In order for this to work, Z2M must be configured to detect and subsequentially provide device
+    availability, see https://www.zigbee2mqtt.io/guide/configuration/device-availability.html.
     """
-
-    expiration_hours: int
 
     async def initialize(self):
         # await super().initialize()
 
-        self.mqtt_subscribe('zigbee2mqtt/+/availability', namespace='mqtt')
+        self.mqtt_subscribe(TOPIC, namespace=PLUGIN_NAMESPACE)
         await self.listen_event(
             self.check_entities,
-            'MQTT_MESSAGE',
-            namespace='mqtt',
-            wildcard='zigbee2mqtt/+/availability',
-            payload='{"state":"offline"}',
+            MQTT_EVEN_NAME,
+            namespace=PLUGIN_NAMESPACE,
+            wildcard=TOPIC,
+            payload=DEVICE_UNAVAILABLE_PAYLOAD,
         )
 
     async def check_entities(self, *args, **kwargs):
         self.logger.debug(args, kwargs)
 
     async def terminate(self):
-        self.mqtt_unsubscribe('zigbee2mqtt/+/availability', namespace='mqtt')
+        self.mqtt_unsubscribe(TOPIC, namespace=PLUGIN_NAMESPACE)
