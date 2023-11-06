@@ -155,3 +155,8 @@ timer_guestroom_light_night_stand:
   entities:
     ent_actuator: light.guestroom_lamp_nightstand
   minutes: 120
+
+zigbee_availability_watchdog:
+  module: watchdog
+  class: NotifyOfflineApp
+  dependencies: dispatcher

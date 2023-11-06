@@ -13,12 +13,12 @@
                 "--config",
                 "config",
                 "-m",
-                "timer_guest_room_light_night_stand",
+                "zigbee_availability_watchdog",
                 "DEBUG"
             ],
             "cwd": "${workspaceFolder}/../..",
             "console": "integratedTerminal",
-            "justMyCode": true,
+            "justMyCode": false,
         },
     ]
 }
