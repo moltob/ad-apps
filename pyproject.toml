@@ -3,7 +3,7 @@ name = "appdaemon-apps"
 version = "0.1.0"
 description = ""
 authors = ["Mike Pagel <mike@mpagel.de>"]
-readme = "README.md"
+# readme = "README.md"
 # packages = [{include = "appdaemon_apps"}]
 
 [tool.poetry.dependencies]
