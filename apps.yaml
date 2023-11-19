@@ -160,3 +160,5 @@ zigbee_availability_watchdog:
   module: watchdog
   class: NotifyOfflineApp
   dependencies: dispatcher
+  notify:
+    service: mobile_app_sm_s901b

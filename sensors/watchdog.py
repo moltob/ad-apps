@@ -61,8 +61,9 @@ class NotifyOfflineApp(appdaemon.plugins.mqtt.mqttapi.Mqtt):
         device = parts[1]
         self.logger.info('Device %r is offline.', device)
 
+        service = self.args['notify'].get('service', 'notify')
         await self.call_service(
-            f'notify/notify',
+            f'notify/{service}',
             title='Zigbee device availability',
             message=f'{device!r} is no longer online.',
         )
