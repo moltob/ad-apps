@@ -11,7 +11,7 @@ PERIOD_MINUTES = 15
 class RadiatorApp(MyHomeAssistantApp):
     ent_radiator: appdaemon.entity.Entity
     ent_temperature: appdaemon.entity.Entity
-    ent_window: appdaemon.entity.Entity
+    ent_windows: list[appdaemon.entity.Entity]
     ent_time_comfort_start: appdaemon.entity.Entity
     ent_time_comfort_stop: appdaemon.entity.Entity
     ent_temperature_comfort: appdaemon.entity.Entity
@@ -22,7 +22,7 @@ class RadiatorApp(MyHomeAssistantApp):
         await self.listen_application_trigger_event(self.control_radiator)
 
         for entity in (
-            self.ent_window,
+            *self.ent_windows,
             self.ent_time_comfort_start,
             self.ent_time_comfort_stop,
             self.ent_time_comfort_stop,
@@ -34,8 +34,8 @@ class RadiatorApp(MyHomeAssistantApp):
         await self.run_every(self.control_radiator, 'now + 5', PERIOD_MINUTES * 60)
 
     async def control_radiator(self, *args, **kwargs):
-        # stop heating if window is open:
-        if await self.ent_window.get_state() == 'on':
+        # stop heating if any window is open:
+        if any([await ent_window.get_state() == 'on' for ent_window in self.ent_windows]):
             await self.set_temperature(0, 'Window open')
             return
 

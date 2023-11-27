@@ -19,7 +19,9 @@ radiator_attic:
   entities:
     ent_radiator: climate.attic_radiator
     ent_temperature: sensor.attic_climate_temperature
-    ent_window: binary_sensor.attic_window_contact
+    ent_windows:
+      - binary_sensor.attic_window_contact
+      - binary_sensor.attic_window_2_contact
     ent_time_comfort_start: input_datetime.attic_time_comfort_start
     ent_time_comfort_stop: input_datetime.attic_time_comfort_stop
     ent_temperature_comfort: input_number.attic_temperature_comfort
@@ -32,7 +34,8 @@ radiator_guestbath:
   entities:
     ent_radiator: climate.guestbath_radiator
     ent_temperature: sensor.guestbath_climate_temperature
-    ent_window: binary_sensor.guestbath_window_contact
+    ent_windows:
+      - binary_sensor.guestbath_window_contact
     ent_time_comfort_start: input_datetime.guestbath_time_comfort_start
     ent_time_comfort_stop: input_datetime.guestbath_time_comfort_stop
     ent_temperature_comfort: input_number.guestbath_temperature_comfort

@@ -13,7 +13,7 @@
                 "--config",
                 "config",
                 "-m",
-                "zigbee_availability_watchdog",
+                "radiator_attic",
                 "DEBUG"
             ],
             "cwd": "${workspaceFolder}/../..",
