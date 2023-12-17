@@ -164,7 +164,7 @@ zigbee_availability_watchdog:
   class: NotifyOfflineApp
   dependencies: dispatcher
   notify:
-    service: mobile_app_sm_s901b
+    service: mobile_app_s22_mike
 
 unifi_firewall_addressgroup_updater:
   module: unifi
@@ -179,4 +179,4 @@ unifi_firewall_addressgroup_updater:
     # can be retrieved from user interface, when editing the address group:
     address_group_id: 656c95620ccf831085f4ff42
   notify:
-    service: mobile_app_sm_s901b
+    service: mobile_app_s22_mike
