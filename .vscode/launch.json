@@ -13,8 +13,8 @@
                 "--config",
                 "config",
                 "-m",
-                "radiator_attic",
-                "DEBUG"
+                "unifi_firewall_addressgroup_updater",
+                "DEBUG",
             ],
             "cwd": "${workspaceFolder}/../..",
             "console": "integratedTerminal",
