@@ -173,7 +173,7 @@ unifi_firewall_addressgroup_updater:
   entities:
     ent_ipv6_address: sensor.ipv6_address_global
   unifi:
-    url: https://unifi
+    url: https://unifi.erx.box
     username: homeassistant
     password: !secret unifi_password
     # can be retrieved from user interface, when editing the address group:
