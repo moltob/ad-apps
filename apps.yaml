@@ -175,7 +175,7 @@ unifi_firewall_addressgroup_updater:
   unifi:
     url: https://unifi
     username: homeassistant
-    password: !secret UNIFI_PASSWORD
+    password: !secret unifi_password
     # can be retrieved from user interface, when editing the address group:
     address_group_id: 656c95620ccf831085f4ff42
   notify:
