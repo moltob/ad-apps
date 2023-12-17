@@ -165,3 +165,18 @@ zigbee_availability_watchdog:
   dependencies: dispatcher
   notify:
     service: mobile_app_sm_s901b
+
+unifi_firewall_addressgroup_updater:
+  module: unifi
+  class: FirewallAddressGroupUpdaterApp
+  dependencies: dispatcher
+  entities:
+    ent_ipv6_address: sensor.ipv6_address_global
+  unifi:
+    url: https://unifi
+    username: homeassistant
+    password: !secret UNIFI_PASSWORD
+    # can be retrieved from user interface, when editing the address group:
+    address_group_id: 656c95620ccf831085f4ff42
+  notify:
+    service: mobile_app_sm_s901b
