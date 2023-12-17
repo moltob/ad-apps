@@ -75,3 +75,9 @@ class FirewallAddressGroupUpdaterApp(MyHomeAssistantApp):
             )
             response.raise_for_status()
             self.logger.debug('Successfully updated address group.')
+
+            await self.call_service(
+                f'notify/{self.notify_service}',
+                title='Firewall Configuration Success',
+                message=f'HA address group adapted to new IPv6 address {new!r}.',
+            )
