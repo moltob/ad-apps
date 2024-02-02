@@ -78,8 +78,12 @@ class MultiLightToggleApp(MyHomeAssistantApp):
             ', '.join(e.entity_id for e in self.ent_lights),
         )
 
-        await self.ent_switch.listen_state(self.switch_to_next_light, new='single')
-        await self.ent_switch.listen_state(self.toggle_all_lights, new='double')
+        actions = self.args.get('actions', {})
+        action_single = actions.get('single', 'single')
+        action_double = actions.get('double', 'double')
+
+        await self.ent_switch.listen_state(self.switch_to_next_light, new=action_single)
+        await self.ent_switch.listen_state(self.toggle_all_lights, new=action_double)
 
     async def switch_to_next_light(self, entity, attribute, old, new, *args, **kwargs):
         if (current_index := await self.get_first_lit_index()) is not None:
