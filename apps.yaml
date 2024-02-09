@@ -12,8 +12,8 @@ multi_toggle_attic_lights:
       - light.attic_balllight
       - light.attic_lamp_shelf
   actions:
-    single: '1_single'
-    double: '1_double'
+    single: 'single'
+    double: 'double'
 
 radiator_attic:
   module: radiator
