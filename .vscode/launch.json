@@ -13,7 +13,7 @@
                 "--config",
                 "config",
                 "-m",
-                "unifi_firewall_addressgroup_updater",
+                "radiator_guestbath",
                 "DEBUG",
             ],
             "cwd": "${workspaceFolder}/../..",

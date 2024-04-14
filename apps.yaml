@@ -43,6 +43,7 @@ radiator_guestbath:
     ent_time_comfort_stop: input_datetime.guestbath_time_comfort_stop
     ent_temperature_comfort: input_number.guestbath_temperature_comfort
     ent_temperature_eco: input_number.guestbath_temperature_eco
+  send_hvac_mode: True
 
 toggle_diningroom_light_left:
   module: toggle

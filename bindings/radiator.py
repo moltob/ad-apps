@@ -1,5 +1,6 @@
 """Basic radiator control through external temperature sensor."""
 import datetime
+import typing as t
 
 import appdaemon.entity
 
@@ -17,8 +18,16 @@ class RadiatorApp(MyHomeAssistantApp):
     ent_temperature_comfort: appdaemon.entity.Entity
     ent_temperature_eco: appdaemon.entity.Entity
 
+    send_hvac_mode: bool
+    """Flag whether the controller sends the HVAC mode exlpicitly.
+
+    Radiators like the AVM do not accept a target temparatur if the mode is set, but go to 100%. For
+    those, do not send the mode. Others, like Aqara, need the mode to fully switch off.
+    """
+
     async def initialize(self):
         await super().initialize()
+        self.send_hvac_mode = self.args.get('send_hvac_mode', False)
         await self.listen_application_trigger_event(self.control_radiator)
 
         for entity in (
@@ -62,16 +71,25 @@ class RadiatorApp(MyHomeAssistantApp):
         if target_temperature > 0 and actual_temperature < target_temperature:
             offset = max(0.0, 2 * (apparent_temperature - actual_temperature))
             set_temperature = int(round(target_temperature + offset, 0))
+            set_mode = 'heat'
         else:
             set_temperature = 0
+            set_mode = 'off'
 
         self.logger.info(
-            '%s: target = %s, apparent = %s, actual = %s, set = %s.',
+            '%s: target = %s, apparent = %s, actual = %s, set = %s, mode=%r.',
             reason,
             target_temperature,
             apparent_temperature,
             actual_temperature,
             set_temperature,
+            set_mode,
         )
 
-        await self.ent_radiator.call_service('set_temperature', temperature=set_temperature)
+        # only some radiators allow using target temeperator _and_ heating mode, others go to 100% if
+        # mode is set to "heat", send or don't send the mode, depending on config:
+        args: dict[str, t.Any] = {'temperator': set_temperature}
+        if self.send_hvac_mode:
+            args['hvac_mode'] = set_mode
+
+        await self.ent_radiator.call_service('set_temperature', **args)
