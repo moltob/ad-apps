@@ -88,7 +88,7 @@ class RadiatorApp(MyHomeAssistantApp):
 
         # only some radiators allow using target temeperator _and_ heating mode, others go to 100% if
         # mode is set to "heat", send or don't send the mode, depending on config:
-        args: dict[str, t.Any] = {'temperator': set_temperature}
+        args: dict[str, t.Any] = {'temperature': set_temperature}
         if self.send_hvac_mode:
             args['hvac_mode'] = set_mode
 
