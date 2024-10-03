@@ -25,9 +25,23 @@ class RadiatorApp(MyHomeAssistantApp):
     those, do not send the mode. Others, like Aqara, need the mode to fully switch off.
     """
 
+    min_temperature: int
+    max_temperature: int
+
     async def initialize(self):
         await super().initialize()
         self.send_hvac_mode = self.args.get('send_hvac_mode', False)
+
+        # store radiator temperature range:
+        self.min_temperature = int(await self.ent_radiator.get_state('min_temp'))
+        self.max_temperature = int(await self.ent_radiator.get_state('max_temp'))
+
+        self.logger.info(
+            'Allowed temperature range: [%s, %s]',
+            self.min_temperature,
+            self.max_temperature,
+        )
+
         await self.listen_application_trigger_event(self.control_radiator)
 
         for entity in (
@@ -70,10 +84,13 @@ class RadiatorApp(MyHomeAssistantApp):
 
         if target_temperature > 0 and actual_temperature < target_temperature:
             offset = max(0.0, 2 * (apparent_temperature - actual_temperature))
-            set_temperature = int(round(target_temperature + offset, 0))
-            set_mode = 'heat'
+            set_temperature = min(self.max_temperature, int(round(target_temperature + offset, 0)))
+
+            # only some radiators allow using target temparature _and_ heating mode, others go to
+            # 100% if mode is set to "heat", send or don't send the mode, depending on config:
+            set_mode = 'heat' if self.send_hvac_mode else None
         else:
-            set_temperature = 0
+            set_temperature = self.min_temperature
             set_mode = 'off'
 
         self.logger.info(
@@ -86,10 +103,8 @@ class RadiatorApp(MyHomeAssistantApp):
             set_mode,
         )
 
-        # only some radiators allow using target temeperator _and_ heating mode, others go to 100% if
-        # mode is set to "heat", send or don't send the mode, depending on config:
         args: dict[str, t.Any] = {'temperature': set_temperature}
-        if self.send_hvac_mode:
+        if set_mode:
             args['hvac_mode'] = set_mode
 
         await self.ent_radiator.call_service('set_temperature', **args)

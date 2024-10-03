@@ -6,14 +6,14 @@
     "configurations": [
         {
             "name": "appdaemon",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "appdaemon",
             "args": [
                 "--config",
                 "config",
                 "-m",
-                "radiator_guestbath",
+                "radiator_attic",
                 "DEBUG",
             ],
             "cwd": "${workspaceFolder}/../..",
