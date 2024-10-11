@@ -2,18 +2,18 @@ dispatcher:
   module: base
   class: AppTriggerDispatcher
 
-multi_toggle_attic_lights:
-  module: toggle
-  class: MultiLightToggleApp
-  dependencies: dispatcher
-  entities:
-    ent_switch: sensor.attic_switch_lights_action
-    ent_lights:
-      - light.attic_balllight
-      - light.attic_lamp_shelf
-  actions:
-    single: 'single'
-    double: 'double'
+# multi_toggle_attic_lights:
+#   module: toggle
+#   class: MultiLightToggleApp
+#   dependencies: dispatcher
+#   entities:
+#     ent_switch: sensor.attic_switch_lights_action
+#     ent_lights:
+#       - light.attic_balllight
+#       - light.attic_lamp_shelf
+#   actions:
+#     single: "single"
+#     double: "double"
 
 radiator_attic:
   module: radiator
@@ -29,6 +29,20 @@ radiator_attic:
     ent_time_comfort_stop: input_datetime.attic_time_comfort_stop
     ent_temperature_comfort: input_number.attic_temperature_comfort
     ent_temperature_eco: input_number.attic_temperature_eco
+
+radiator_bedroom_ben:
+  module: radiator
+  class: RadiatorApp
+  dependencies: dispatcher
+  entities:
+    ent_radiator: climate.bedroom_ben_radiator
+    ent_temperature: sensor.bedroom_ben_climate_temperature
+    ent_windows:
+      - binary_sensor.bedroom_ben_window_contact
+    ent_time_comfort_start: input_datetime.bedroom_ben_time_comfort_start
+    ent_time_comfort_stop: input_datetime.bedroom_ben_time_comfort_stop
+    ent_temperature_comfort: input_number.bedroom_ben_temperature_comfort
+    ent_temperature_eco: input_number.bedroom_ben_temperature_eco
 
 radiator_guestbath:
   module: radiator

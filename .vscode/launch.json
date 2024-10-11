@@ -13,7 +13,7 @@
                 "--config",
                 "config",
                 "-m",
-                "radiator_attic",
+                "radiator_bedroom_ben",
                 "DEBUG",
             ],
             "cwd": "${workspaceFolder}/../..",
