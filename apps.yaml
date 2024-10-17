@@ -2,18 +2,18 @@ dispatcher:
   module: base
   class: AppTriggerDispatcher
 
-# multi_toggle_attic_lights:
-#   module: toggle
-#   class: MultiLightToggleApp
-#   dependencies: dispatcher
-#   entities:
-#     ent_switch: sensor.attic_switch_lights_action
-#     ent_lights:
-#       - light.attic_balllight
-#       - light.attic_lamp_shelf
-#   actions:
-#     single: "single"
-#     double: "double"
+multi_toggle_attic_lights:
+  module: toggle
+  class: MultiLightToggleApp
+  dependencies: dispatcher
+  entities:
+    ent_switch: sensor.attic_switch_lights_action
+    ent_lights:
+      - light.attic_balllight
+      - light.attic_lamp_shelf
+  actions:
+    single: "single"
+    double: "double"
 
 radiator_attic:
   module: radiator
