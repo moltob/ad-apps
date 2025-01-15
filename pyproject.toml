@@ -58,14 +58,14 @@ quote-style = "single"
 [tool.pyright]
 useLibraryCodeForTypes = true
 #include = ["bindings", "scripts"]
-exclude = ["**/node_modules", "**/__pycache__"]
+exclude = ["**/node_modules", "**/__pycache__", "**/.venv"]
 deprecateTypingAliases = true
 reportAssertAlwaysTrue = true
 reportCallInDefaultInitializer = true
 reportConstantRedefinition = true
 reportDeprecated = true
 reportDuplicateImport = true
-reportImplicitOverride = true
+# reportImplicitOverride = true                 # 3.12+
 reportImplicitStringConcatenation = false       # we do this to split strings due to line length
 reportImportCycles = false                      # we do have cycles for type checking only
 reportIncompleteStub = true
