@@ -1,4 +1,5 @@
 """Observe power consumption of a device."""
+
 import datetime
 import enum
 
@@ -59,7 +60,6 @@ class PowerObserverApp(MyHomeAssistantApp):
             return
 
         power = float(new)
-        now = datetime.datetime.now()
 
         self.logger.debug('Power changed to %.2f W.', power)
         if power > 3500:
