@@ -1,4 +1,5 @@
 """Toogle an entity after a switch was pushed."""
+
 import datetime
 
 import appdaemon.entity

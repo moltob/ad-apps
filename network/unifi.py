@@ -1,4 +1,5 @@
 """Helpers to interact with Ubiquity Unifi controllers."""
+
 import base64
 import json
 

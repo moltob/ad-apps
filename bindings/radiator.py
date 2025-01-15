@@ -1,4 +1,5 @@
 """Basic radiator control through external temperature sensor."""
+
 import datetime
 
 import appdaemon.entity
