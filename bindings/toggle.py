@@ -1,5 +1,6 @@
 """Toogle an entity after a switch was pushed."""
 import datetime
+
 import appdaemon.entity
 
 from util.base import MyHomeAssistantApp

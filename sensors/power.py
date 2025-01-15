@@ -1,6 +1,7 @@
 """Observe power consumption of a device."""
 import datetime
 import enum
+
 import appdaemon.entity
 
 from util.base import MyHomeAssistantApp
