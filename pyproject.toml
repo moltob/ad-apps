@@ -1,23 +1,28 @@
-[tool.poetry]
+[project]
 name = "appdaemon-apps"
 version = "0.1.0"
-description = ""
-authors = ["Mike Pagel <mike@mpagel.de>"]
-# readme = "README.md"
-# packages = [{include = "appdaemon_apps"}]
+description = "HA automations with AppDaemon"
+# from https://github.com/hassio-addons/addon-appdaemon/blob/main/appdaemon/Dockerfile
+requires-python = "==3.11.11"
+dependencies = [
+    # from https://github.com/hassio-addons/addon-appdaemon/blob/main/appdaemon/requirements.txt
+    "appdaemon==4.4.2",
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-appdaemon = "^4.4.2"
+[dependency-groups]
+dev = [
+    "pyright>=1.1.391",
+    "ruff>=0.9.1",
+    "yamllint>=1.35.1",
+]
 
-[tool.poetry.group.dev.dependencies]
-mypy = "^1.7.0"
-ruff = "^0.1.8"
-pyright = "^1.1.383"
+[tool.uv]
+# this is no package but a loose collection of files processed by AD:
+package = false
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+# [build-system]
+# requires = ["hatchling"]
+# build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 100
@@ -46,15 +51,6 @@ ignore = [
 
 [tool.ruff.lint.isort]
 lines-between-types = 1
-
-[tool.ruff.lint.pyflakes]
-# list of generics, so ruff recognizes that the arguments are always types:
-extend-generics = ["zephyr.model.element.ContextMixin"]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/*" = [
-    "SLF001", # allow access to private members in tests
-]
 
 [tool.ruff.format]
 quote-style = "single"
