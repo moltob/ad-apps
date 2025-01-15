@@ -1,11 +1,7 @@
 """Watchdog observing device status."""
 
-import datetime
-
 import appdaemon.entity
 import appdaemon.plugins.mqtt.mqttapi
-
-from util.base import MyHomeAssistantApp
 
 TOPIC = 'zigbee2mqtt/+/availability'
 """Topic yielding devices' availability status."""

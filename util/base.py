@@ -7,7 +7,7 @@ import appdaemon.plugins.hass.hassapi
 class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
     """Base class exposing some utilities for AppDaemon apps."""
 
-    app_trigger_dispatcher: t.Optional['AppTriggerDispatcher'] = None
+    app_trigger_dispatcher: t.Optional['AppTriggerDispatcher'] = None  # pyright: ignore[reportDeprecated]  # needed for forward ref
 
     async def initialize(self):
         """Initialize entities of derived class.
