@@ -3,58 +3,8 @@
 import datetime
 
 import appdaemon.entity
-import appdaemon.plugins.mqtt.mqttapi
 
 from util.base import MyHomeAssistantApp
-
-MQTT_PLUGIN_NAMESPACE = 'mqtt'
-"""Namespace of the AD MQTT plugin, set in `appdaemon.yaml`."""
-
-
-class MqttActionAdapterApp(appdaemon.plugins.mqtt.mqttapi.Mqtt):
-    """Adapter converting MQTT-action messages to callbacks.
-
-    Z2M 2.0.0 is removing the kegacy action entity which therefore can no longer be monitored for
-    state changes, as that change would possible not change on repeatedly pressing the same button.
-
-    The documented approach of using device triggers is (a) depending on opaque hex device IDs and
-    (b) not supported by AddDaemon of of today.
-
-    As a "workaround" listen to MQTT topics and convert them to callbacks that were previously
-    triggered by action entity changes.
-    """
-
-    topic: str | None = None
-
-    async def initialize(self, *, sensor: appdaemon.entity.Entity, action: str, callback):
-        friendly_name = sensor.friendly_name
-        suffix = ' Action'
-
-        if not friendly_name.endswith(suffix):
-            self.logger.error(
-                'MQTT adapter can only adapt action entities, but name of %r does not end with %r. '
-                'Skipping.',
-                friendly_name,
-                suffix,
-            )
-            return
-
-        async def _callback(*args, **kwargs):
-            await callback()
-
-        self.topic = f'zigbee2mqtt/{friendly_name[: -len(suffix)]}/action'
-        self.mqtt_subscribe(self.topic, namespace=MQTT_PLUGIN_NAMESPACE)
-        await self.listen_event(
-            _callback,
-            'MQTT_MESSAGE',
-            namespace=MQTT_PLUGIN_NAMESPACE,
-            payload=action,
-        )
-
-    async def terminate(self):
-        if self.topic:
-            self.mqtt_unsubscribe(self.topic, namespace=MQTT_PLUGIN_NAMESPACE)
-            self.topic = None
 
 
 class ActionToggleApp(MyHomeAssistantApp):
@@ -63,38 +13,19 @@ class ActionToggleApp(MyHomeAssistantApp):
     ent_sensor: appdaemon.entity.Entity
     ent_actuator: appdaemon.entity.Entity
 
-    legacy_action: bool
-
-    action_adapter: MqttActionAdapterApp
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.action_adapter = MqttActionAdapterApp(*args, **kwargs)
-
     async def initialize(self):
         await super().initialize()
-
-        self.legacy_action = self.args.get('legacy_action', False)
 
         self.logger.info(
             'Binding switch %r to actuator %r.',
             self.ent_sensor.entity_id,
             self.ent_actuator.entity_id,
         )
+        await self.ent_sensor.listen_state(
+            self.toggle_actuator, new=self.args.get('sensor_action', 'single')
+        )
 
-        sensor_action = self.args.get('sensor_action', 'single')
-        if self.legacy_action:
-
-            async def toggle_actuator(self, entity, attribute, old, new, *args, **kwargs):
-                await self.toggle_actuator()
-
-            await self.ent_sensor.listen_state(toggle_actuator, sensor_action)
-        else:
-            await self.action_adapter.initialize(
-                sensor=self.ent_sensor, action=sensor_action, callback=self.toggle_actuator
-            )
-
-    async def toggle_actuator(self):
+    async def toggle_actuator(self, entity, attribute, old, new, *args, **kwargs):
         self.logger.info(
             '%r was pushed, toggeling %r. Current state was %r.',
             self.ent_sensor.name,
@@ -102,11 +33,6 @@ class ActionToggleApp(MyHomeAssistantApp):
             await self.ent_actuator.get_state(),
         )
         await self.ent_actuator.toggle()
-
-    async def terminate(self):
-        if not self.legacy_action:
-            await self.action_adapter.terminate()
-        await super().terminate()
 
 
 class WelcomeLightApp(MyHomeAssistantApp):

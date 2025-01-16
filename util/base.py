@@ -2,6 +2,7 @@ import typing as t
 
 import appdaemon.entity
 import appdaemon.plugins.hass.hassapi
+import appdaemon.plugins.mqtt.mqttapi
 
 
 class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
@@ -110,3 +111,57 @@ class AppTriggerDispatcher(appdaemon.plugins.hass.hassapi.Hass):
 
         # propagate the trigger to application instance:
         await callback()
+
+
+MQTT_PLUGIN_NAMESPACE = 'mqtt'
+"""Namespace of the AD MQTT plugin, set in `appdaemon.yaml`."""
+
+
+class Z2mLegacyTriggerApp(appdaemon.plugins.mqtt.mqttapi.Mqtt):
+    """Adapter converting MQTT-action messages to callbacks.
+
+    Z2M 2.0.0 is removing the kegacy action entity which therefore can no longer be monitored for
+    state changes, as that change would possible not change on repeatedly pressing the same button.
+
+    The documented approach of using device triggers is (a) depending on opaque hex device IDs and
+    (b) not supported by AddDaemon of of today.
+
+    As a "workaround" listen to MQTT topics and convert them to callbacks that were previously
+    triggered by action entity changes.
+    """
+
+    empty_action_state = ''
+
+    async def initialize(self):
+        mappings: list[dict[str, str]] = self.args.get('mappings')
+
+        if not mappings:
+            self.logger.error(
+                'No mappings have been defined for adapting MQTT action topics to entities.'
+            )
+            return
+
+        self.mqtt_subscribe('zigbee2mqtt/+/action', namespace=MQTT_PLUGIN_NAMESPACE)
+
+        for mapping in mappings:
+            entity_id = mapping['entity']
+            await self.add_entity(entity_id, namespace='default')
+            entity = self.get_entity(entity_id)
+
+            async def topic_received(event, data, *args, **kwargs):
+                self.logger.info('Received topic event=%r, data=%r, kwargs=%r', event, data, kwargs)
+                await entity.set_state(state=data['payload'])
+                await self.sleep(0.01)  # pyright: ignore[reportArgumentType]  # incorrectly typed in AD
+                await entity.set_state(state=self.empty_action_state)
+
+            await entity.set_state(state=self.empty_action_state)
+
+            device_name = mapping['mqtt_device']
+            topic = f'zigbee2mqtt/{device_name}/action'
+            self.mqtt_subscribe(topic, namespace=MQTT_PLUGIN_NAMESPACE)
+            await self.listen_event(
+                topic_received,
+                'MQTT_MESSAGE',
+                namespace=MQTT_PLUGIN_NAMESPACE,
+                topic=topic,
+            )
