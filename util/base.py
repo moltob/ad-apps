@@ -148,11 +148,11 @@ class Z2mLegacyTriggerApp(appdaemon.plugins.mqtt.mqttapi.Mqtt):
             await self.add_entity(entity_id, namespace='default')
             entity = self.get_entity(entity_id)
 
-            async def topic_received(event, data, *args, **kwargs):
+            async def topic_received(event, data, *args, entity_=entity, **kwargs):
                 self.logger.info('Received topic event=%r, data=%r, kwargs=%r', event, data, kwargs)
-                await entity.set_state(state=data['payload'])
+                await entity_.set_state(state=data['payload'])
                 await self.sleep(0.01)  # pyright: ignore[reportArgumentType]  # incorrectly typed in AD
-                await entity.set_state(state=self.empty_action_state)
+                await entity_.set_state(state=self.empty_action_state)
 
             await entity.set_state(state=self.empty_action_state)
 
