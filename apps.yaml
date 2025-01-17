@@ -2,12 +2,27 @@ dispatcher:
   module: base
   class: AppTriggerDispatcher
 
+# Simulate legacy action trigger entities as they were part of Z2M < 2.0.0 by specifying a map of a
+# (virtual, AD-internal) entity that is pupolated by evalutating the MQTT action topic.
+z2m_legacy_trigger:
+  module: base
+  class: Z2mLegacyTriggerApp
+  mappings:
+    - mqtt_device: Dressingroom Switch Lights Attic
+      entity: sensor.dressingroom_switch_lights_attic_action_sim
+    - mqtt_device: Livingroom Switch Floorlamps Couch
+      entity: sensor.livingroom_switch_floorlamps_couch_action_sim
+    - mqtt_device: Attic Switch Lights
+      entity: sensor.attic_switch_lights_action_sim
+    - mqtt_device: Diningroom Switch Lights
+      entity: sensor.diningroom_switch_lights_action_sim
+
 multi_toggle_attic_lights:
   module: toggle
   class: MultiLightToggleApp
-  dependencies: dispatcher
+  dependencies: [dispatcher, z2m_legacy_trigger]
   entities:
-    ent_switch: sensor.attic_switch_lights_action
+    ent_switch: sensor.attic_switch_lights_action_sim
     ent_lights:
       - light.attic_balllight
       - light.attic_lamp_shelf
@@ -62,45 +77,45 @@ radiator_guestbath:
 toggle_diningroom_light_left:
   module: toggle
   class: ActionToggleApp
-  dependencies: dispatcher
+  dependencies: [dispatcher, z2m_legacy_trigger]
   entities:
-    ent_sensor: sensor.diningroom_switch_lights_action
+    ent_sensor: sensor.diningroom_switch_lights_action_sim
     ent_actuator: light.diningroom_light_left
   sensor_action: single_left
 
 toggle_diningroom_light_right:
   module: toggle
   class: ActionToggleApp
-  dependencies: dispatcher
+  dependencies: [dispatcher, z2m_legacy_trigger]
   entities:
-    ent_sensor: sensor.diningroom_switch_lights_action
+    ent_sensor: sensor.diningroom_switch_lights_action_sim
     ent_actuator: light.diningroom_light_right
   sensor_action: single_right
 
 toggle_dressingroom_lamp_shelf:
   module: toggle
   class: ActionToggleApp
-  dependencies: dispatcher
+  dependencies: [dispatcher, z2m_legacy_trigger]
   entities:
-    ent_sensor: sensor.dressingroom_switch_lights_attic_action
+    ent_sensor: sensor.dressingroom_switch_lights_attic_action_sim
     ent_actuator: light.attic_lamp_shelf
   sensor_action: single_left
 
 toggle_dressingroom_balllight:
   module: toggle
   class: ActionToggleApp
-  dependencies: dispatcher
+  dependencies: [dispatcher, z2m_legacy_trigger]
   entities:
-    ent_sensor: sensor.dressingroom_switch_lights_attic_action
+    ent_sensor: sensor.dressingroom_switch_lights_attic_action_sim
     ent_actuator: light.attic_balllight
   sensor_action: single_right
 
 toggle_livingroom_floorlamps_couch:
   module: toggle
   class: ActionToggleApp
-  dependencies: dispatcher
+  dependencies: [dispatcher, z2m_legacy_trigger]
   entities:
-    ent_sensor: sensor.livingroom_switch_floorlamps_couch_action
+    ent_sensor: sensor.livingroom_switch_floorlamps_couch_action_sim
     ent_actuator: light.livingroom_floorlamps_couch
 
 welcome_lights:
