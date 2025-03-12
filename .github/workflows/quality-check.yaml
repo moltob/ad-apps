@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           # from https://github.com/hassio-addons/addon-appdaemon/blob/main/appdaemon/Dockerfile
-          python-version: "3.11.11"
+          python-version: "3.13.2"
 
       - name: Install the project
         run: uv sync
