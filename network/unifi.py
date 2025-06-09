@@ -30,7 +30,7 @@ class FirewallAddressGroupUpdaterApp(MyHomeAssistantApp):
         self.notify_service = self.args['notify'].get('service')
 
         self.logger.info('Watching IPv6 address sensor %r.', self.ent_ipv6_address.entity_id)
-        await self.ent_ipv6_address.listen_state(self.update_address_group)
+        await self.ent_ipv6_address.listen_state(self.update_address_group)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
     async def update_address_group(self, entity, attribute, old, new, *args, **kwargs):
         self.logger.info(

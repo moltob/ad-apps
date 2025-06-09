@@ -37,12 +37,12 @@ class PowerObserverApp(MyHomeAssistantApp):
         self.state_entered = datetime.datetime.now()
         self.done_timer_handle = None
 
-        await self.ent_power.listen_state(self.process_power_change)
+        await self.ent_power.listen_state(self.process_power_change)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
     async def _enter_state(self, state: DeviceState, power: float):
         # switching state will cancel the timer if running:
         if self.done_timer_handle:
-            await self.cancel_timer(self.done_timer_handle, True)
+            await self.cancel_timer(self.done_timer_handle, True)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
             self.done_timer_handle = None
 
         self.logger.info(
@@ -89,7 +89,7 @@ class PowerObserverApp(MyHomeAssistantApp):
                 if power <= self.power_done:
                     await self._enter_state(DeviceState.ALMOST_DONE, power)
                     self.done_timer_handle = await self.run_in(
-                        notify_done,
+                        notify_done,  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
                         self.duration_done.total_seconds(),
                     )
 

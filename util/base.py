@@ -52,7 +52,7 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
 
         self.logger.debug('Initializing entity %r.', entity_id)
 
-        if not await entity.exists():
+        if not await entity.exists():  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
             self.logger.warning(
                 'Entity %r not found (passed to app through argument %r).',
                 entity_id,
@@ -71,7 +71,7 @@ class MyHomeAssistantApp(appdaemon.plugins.hass.hassapi.Hass):
         This method must be called in a sequential way, i.e. during app initialization.
         """
         if not self.app_trigger_dispatcher:
-            self.app_trigger_dispatcher = await self.get_app('dispatcher')
+            self.app_trigger_dispatcher = await self.get_app('dispatcher')  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
         assert self.app_trigger_dispatcher
         await self.app_trigger_dispatcher.listen_application_trigger_event(self.name, callback)
@@ -87,7 +87,7 @@ class AppTriggerDispatcher(appdaemon.plugins.hass.hassapi.Hass):
         # listen to the generic application trigger event:
         self.trigger_dispatch_table = {}
         self.trigger_handle = await self.listen_event(
-            self._dispatch_trigger_to_app,
+            self._dispatch_trigger_to_app,  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
             'ad_trigger',
         )
 
@@ -145,22 +145,22 @@ class Z2mLegacyTriggerApp(appdaemon.plugins.mqtt.mqttapi.Mqtt):
 
         for mapping in mappings:
             entity_id = mapping['entity']
-            await self.add_entity(entity_id, namespace='default')
+            await self.add_entity(entity_id, namespace='default')  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
             entity = self.get_entity(entity_id)
 
             async def topic_received(event, data, *args, entity_=entity, **kwargs):
                 self.logger.info('Received topic event=%r, data=%r, kwargs=%r', event, data, kwargs)
-                await entity_.set_state(state=data['payload'])
+                await entity_.set_state(state=data['payload'])  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
                 await self.sleep(0.01)
-                await entity_.set_state(state=self.empty_action_state)
+                await entity_.set_state(state=self.empty_action_state)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
-            await entity.set_state(state=self.empty_action_state)
+            await entity.set_state(state=self.empty_action_state)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
             device_name = mapping['mqtt_device']
             topic = f'zigbee2mqtt/{device_name}/action'
             self.mqtt_subscribe(topic, namespace=MQTT_PLUGIN_NAMESPACE)
             await self.listen_event(
-                topic_received,
+                topic_received,  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
                 'MQTT_MESSAGE',
                 namespace=MQTT_PLUGIN_NAMESPACE,
                 topic=topic,

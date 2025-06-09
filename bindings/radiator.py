@@ -44,9 +44,9 @@ class RadiatorApp(MyHomeAssistantApp):
             self.ent_temperature_comfort,
             self.ent_temperature_eco,
         ):
-            await entity.listen_state(self.control_radiator)
+            await entity.listen_state(self.control_radiator)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
-        await self.run_every(self.control_radiator, 'now + 5', PERIOD_MINUTES * 60)
+        await self.run_every(self.control_radiator, 'now + 5', PERIOD_MINUTES * 60)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
     async def control_radiator(self, *args, **kwargs):
         # stop heating if any window is open:
