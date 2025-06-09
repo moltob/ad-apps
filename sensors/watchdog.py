@@ -26,7 +26,7 @@ class NotifyOfflineApp(appdaemon.plugins.mqtt.mqttapi.Mqtt):
     async def initialize(self):
         self.mqtt_subscribe(TOPIC, namespace=PLUGIN_NAMESPACE)
         await self.listen_event(
-            self.report_offline_entities,
+            self.report_offline_entities,  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
             MQTT_EVENT_NAME,
             namespace=PLUGIN_NAMESPACE,
             wildcard=TOPIC,

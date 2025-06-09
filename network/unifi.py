@@ -30,7 +30,7 @@ class FirewallAddressGroupUpdaterApp(MyHomeAssistantApp):
         self.notify_service = self.args['notify'].get('service')
 
         self.logger.info('Watching IPv6 address sensor %r.', self.ent_ipv6_address.entity_id)
-        await self.ent_ipv6_address.listen_state(self.update_address_group)
+        await self.ent_ipv6_address.listen_state(self.update_address_group)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
     async def update_address_group(self, entity, attribute, old, new, *args, **kwargs):
         self.logger.info(
@@ -45,7 +45,7 @@ class FirewallAddressGroupUpdaterApp(MyHomeAssistantApp):
             response = await session.post(
                 '/api/auth/login',
                 json={'username': self.unifi_username, 'password': self.unifi_password},
-                verify_ssl=False,
+                ssl=False,
             )
             response.raise_for_status()
             self.logger.debug('Successfully logged into Unifi controller.')
@@ -73,7 +73,7 @@ class FirewallAddressGroupUpdaterApp(MyHomeAssistantApp):
                     'group_members': [new],
                 },
                 headers={'x-csrf-token': csrf_token},
-                verify_ssl=False,
+                ssl=False,
             )
             response.raise_for_status()
             self.logger.debug('Successfully updated address group.')

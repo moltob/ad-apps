@@ -22,7 +22,8 @@ class ActionToggleApp(MyHomeAssistantApp):
             self.ent_actuator.entity_id,
         )
         await self.ent_sensor.listen_state(
-            self.toggle_actuator, new=self.args.get('sensor_action', 'single')
+            self.toggle_actuator,  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
+            new=self.args.get('sensor_action', 'single'),
         )
 
     async def toggle_actuator(self, entity, attribute, old, new, *args, **kwargs):
@@ -45,10 +46,10 @@ class WelcomeLightApp(MyHomeAssistantApp):
         await super().initialize()
 
         for person in self.ent_persons:
-            await person.listen_state(self.turn_lights_on, new='home')
+            await person.listen_state(self.turn_lights_on, new='home')  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
             self.logger.info('Binding welcome light to arrival of %r.', person.entity_id)
 
-        self.logger.info('Next sunset is at %s.', await self.sunset(aware=True))
+        self.logger.info('Next sunset is at %s.', await self.sunset(aware=True))  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
         await self.listen_application_trigger_event(self.turn_lights_on)
 
@@ -84,8 +85,8 @@ class MultiLightToggleApp(MyHomeAssistantApp):
         action_single = actions.get('single', 'single')
         action_double = actions.get('double', 'double')
 
-        await self.ent_switch.listen_state(self.switch_to_next_light, new=action_single)
-        await self.ent_switch.listen_state(self.toggle_all_lights, new=action_double)
+        await self.ent_switch.listen_state(self.switch_to_next_light, new=action_single)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
+        await self.ent_switch.listen_state(self.toggle_all_lights, new=action_double)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
     async def switch_to_next_light(self, entity, attribute, old, new, *args, **kwargs):
         if (current_index := await self.get_first_lit_index()) is not None:
@@ -145,13 +146,13 @@ class TimerApp(MyHomeAssistantApp):
             self.timeout.total_seconds() / 60,
         )
 
-        await self.ent_actuator.listen_state(self.actuator_turned_on, new='on')
-        await self.ent_actuator.listen_state(self.actuator_turned_off, new='off')
-        await self.ent_actuator.listen_state(self.actuator_turned_off, new='unavailable')
+        await self.ent_actuator.listen_state(self.actuator_turned_on, new='on')  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
+        await self.ent_actuator.listen_state(self.actuator_turned_off, new='off')  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
+        await self.ent_actuator.listen_state(self.actuator_turned_off, new='unavailable')  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
     async def actuator_turned_on(self, *args, **kwargs):
         self.logger.info('%r was turned on.', self.ent_actuator.entity_id)
-        self.timeout_handle = await self.run_in(self.timeout_expired, self.timeout.total_seconds())
+        self.timeout_handle = await self.run_in(self.timeout_expired, self.timeout.total_seconds())  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
 
     async def timeout_expired(self, *args, **kwargs):
         self.logger.info('Timeout expired turning off %r.', self.ent_actuator.entity_id)
@@ -162,5 +163,5 @@ class TimerApp(MyHomeAssistantApp):
         self.logger.info('%r was turned off.', self.ent_actuator.entity_id)
 
         if self.timeout_handle:
-            await self.cancel_timer(self.timeout_handle)
+            await self.cancel_timer(self.timeout_handle)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
             self.timeout_handle = None

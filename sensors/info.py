@@ -26,7 +26,7 @@ class InfoApp(MyHomeAssistantApp):
     async def update_helper_entities(self, *args, **kwargs):
         battery_entity_ids = [
             s['entity_id']
-            for s in (await self.get_state()).values()
+            for s in (await self.get_state()).values()  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
             if (c := s['attributes'].get('device_class')) and (c == 'battery')
         ]
 
@@ -35,4 +35,4 @@ class InfoApp(MyHomeAssistantApp):
             self.ent_batteries,
             ', '.join(battery_entity_ids),
         )
-        await self.ent_batteries.set_state(state=battery_entity_ids)
+        await self.ent_batteries.set_state(state=battery_entity_ids)  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
