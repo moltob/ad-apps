@@ -1,6 +1,5 @@
 """Watchdog observing device status."""
 
-import appdaemon.entity
 import appdaemon.plugins.mqtt.mqttapi
 
 TOPIC = 'zigbee2mqtt/+/availability'
