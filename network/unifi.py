@@ -45,7 +45,7 @@ class FirewallAddressGroupUpdaterApp(MyHomeAssistantApp):
             response = await session.post(
                 '/api/auth/login',
                 json={'username': self.unifi_username, 'password': self.unifi_password},
-                verify_ssl=False,
+                ssl=False,
             )
             response.raise_for_status()
             self.logger.debug('Successfully logged into Unifi controller.')
@@ -73,7 +73,7 @@ class FirewallAddressGroupUpdaterApp(MyHomeAssistantApp):
                     'group_members': [new],
                 },
                 headers={'x-csrf-token': csrf_token},
-                verify_ssl=False,
+                ssl=False,
             )
             response.raise_for_status()
             self.logger.debug('Successfully updated address group.')
