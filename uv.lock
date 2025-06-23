@@ -80,7 +80,7 @@ wheels = [
 
 [[package]]
 name = "appdaemon"
-version = "4.5.8"
+version = "4.5.11"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -103,9 +103,9 @@ dependencies = [
     { name = "tomli-w" },
     { name = "uvloop", marker = "sys_platform != 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/2c/2b/16f37bb3cfbaa438120643b8c48ab30b70b460dbed4cfb107309525ddd9a/appdaemon-4.5.8.tar.gz", hash = "sha256:bff5a4d0f993185f08987b673ea0f8bd321330120dd938a69a96c1eb9ea31e23", size = 9560874, upload-time = "2025-06-03T12:00:25.95Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8b/42/30fb1a9d1f5a93b879c4c9c8f03ca671466781f415426ee5e1bb7e1d924a/appdaemon-4.5.11.tar.gz", hash = "sha256:23a9b5c64ba4d8174c8ffdf5b409a5303a750a123272974ab595e2ffa6e99352", size = 9562593, upload-time = "2025-06-23T12:50:18.728Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fe/db/30003239a36885491f011c31613d85cde70c2ee8c94f807f997a31dac181/appdaemon-4.5.8-py3-none-any.whl", hash = "sha256:793559ec4135ed458a9dea383ee373ef53e6c0240ec75b1b0e87c839dfac3369", size = 9664426, upload-time = "2025-06-03T12:00:23.477Z" },
+    { url = "https://files.pythonhosted.org/packages/89/d3/94f62c1b7932b8a11cbfbadff03494a84bd8d3e2665338f0f98ae068c64c/appdaemon-4.5.11-py3-none-any.whl", hash = "sha256:9c724da3e04fa2fbf7f950418883b8ed515efc8c29b7367a4edda06444e201fe", size = 9666320, upload-time = "2025-06-23T12:50:16.491Z" },
 ]
 
 [[package]]
@@ -124,7 +124,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "appdaemon", specifier = "==4.5.8" }]
+requires-dist = [{ name = "appdaemon", specifier = "==4.5.11" }]
 
 [package.metadata.requires-dev]
 dev = [

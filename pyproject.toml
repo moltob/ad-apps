@@ -6,7 +6,7 @@ description = "HA automations with AppDaemon"
 requires-python = "==3.11.11"
 dependencies = [
     # from https://github.com/hassio-addons/addon-appdaemon/blob/v0.17.4/appdaemon/requirements.txt
-    "appdaemon==4.5.8",
+    "appdaemon==4.5.11",
 ]
 
 [dependency-groups]
