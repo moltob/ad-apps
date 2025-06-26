@@ -145,7 +145,7 @@ class Z2mLegacyTriggerApp(appdaemon.plugins.mqtt.mqttapi.Mqtt):
 
         for mapping in mappings:
             entity_id = mapping['entity']
-            await self.add_entity(entity_id, namespace='default')  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
+            await self.add_entity(entity_id, state='', namespace='default')  # pyright: ignore # https://github.com/AppDaemon/appdaemon/issues/2368
             entity = self.get_entity(entity_id)
 
             async def topic_received(event, data, *args, entity_=entity, **kwargs):
