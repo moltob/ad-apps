@@ -2,6 +2,7 @@
 name = "appdaemon-apps"
 version = "0.1.0"
 description = "HA automations with AppDaemon"
+# pinned version: from https://github.com/hassio-addons/addon-appdaemon/blob/v0.17.4/appdaemon/Dockerfile
 requires-python = ">=3.12"
 dependencies = [
     # from https://github.com/hassio-addons/addon-appdaemon/blob/v0.17.4/appdaemon/requirements.txt
